@@ -12,7 +12,7 @@ from src.core.init_db import create_first_superuser
 
 origins = [
     "http://localhost",
-    "http://localhost:8080",
+    "45.87.246.151",
 ]
 
 
