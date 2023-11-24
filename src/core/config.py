@@ -4,7 +4,6 @@ from pydantic import EmailStr
 from pydantic_settings import BaseSettings
 
 
-
 class Settings(BaseSettings):
     app_title: str
     database_url: str
@@ -18,7 +17,7 @@ class Settings(BaseSettings):
     db_port: str
 
     class Config:
-        env_file = '.env'
+        env_file = ".env"
 
 
 settings = Settings()

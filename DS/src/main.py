@@ -1,7 +1,6 @@
 import sys
 from contextlib import asynccontextmanager
 
-import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,7 +9,6 @@ sys.path.append("")
 from src.api.routers import all_routers
 from src.core.config import settings
 from src.core.init_db import create_first_superuser
-
 
 origins = [
     "http://localhost",

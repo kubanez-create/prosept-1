@@ -1,17 +1,12 @@
 import asyncio
 import csv
-import json
 import sys
 
 import aiohttp
-from sqlalchemy import insert
-from sqlalchemy.ext.asyncio import AsyncSession
 
 sys.path.append("")
 
 from src.db.db import async_session_maker
-from src.models.clients import Client
-from src.services.products import ProductService
 
 
 class Loader:
@@ -52,7 +47,7 @@ class Loader:
                             url,
                             json=product_obj,
                             headers=headers,
-                        ) as response:
+                        ):
                             pass
 
 

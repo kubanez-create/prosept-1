@@ -1,5 +1,6 @@
 from datetime import date
 from typing import Optional
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -28,5 +29,5 @@ class DealerPrice(Base):
             product_url=self.product_url,
             product_name=self.product_name,
             date=self.date,
-            dealer_id=self.dealer_id
+            dealer_id=self.dealer_id,
         )

@@ -1,7 +1,6 @@
 from typing import Annotated, AsyncGenerator
 
 from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
 from fastapi_users import (
     BaseUserManager,
     FastAPIUsers,
@@ -23,7 +22,9 @@ from src.models.users import User
 async def get_user_db(session: Annotated[AsyncSession, Depends(get_async_session)]):
     yield SQLAlchemyUserDatabase(session, User)
 
+
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
+
 
 def get_jwt_strategy() -> JWTStrategy:
     return JWTStrategy(secret=settings.secret, lifetime_seconds=3600)
@@ -35,8 +36,10 @@ auth_backend = AuthenticationBackend(
     get_strategy=get_jwt_strategy,
 )
 
+
 class UserManager(UUIDIDMixin, BaseUserManager[User, int]):
     pass
+
 
 async def get_user_manager(
     user_db: Annotated[AsyncGenerator, Depends(get_user_db)]

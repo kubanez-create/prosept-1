@@ -3,17 +3,15 @@ import os
 import sys
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-
-from alembic import context
 
 sys.path.append(os.path.join(sys.path[0], "src"))
 
 from core.config import settings
 from models import Base
-
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.database_url + "?async_fallback=True")

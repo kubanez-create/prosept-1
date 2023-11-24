@@ -1,4 +1,5 @@
 from typing import List, Optional
+
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db.db import Base
@@ -22,8 +23,9 @@ class Product(Base):
     wb_article: Mapped[Optional[float]]
     ym_article: Mapped[Optional[str]]
     wb_article_td: Mapped[Optional[str]]
-    proddealers: Mapped[
-        List["ProductDealer"]] = relationship(back_populates="product_obj")
+    proddealers: Mapped[List["ProductDealer"]] = relationship(
+        back_populates="product_obj"
+    )
 
     def to_read_model(self) -> Product:
         return Product(
