@@ -2,19 +2,16 @@ from abc import ABC, abstractmethod
 from typing import Type
 
 from src.db.db import async_session_maker
-from src.repositories.clients import ClientRepository
+from src.repositories.dealers import DealerRepository
 from src.repositories.products import ProductRepository
-from src.repositories.promotions import PromoItemRepository, PromoRepository
 from src.repositories.users import UsersRepository
 
 
 # https://github1s.com/cosmicpython/code/tree/chapter_06_uow
 class IUnitOfWork(ABC):
     users: Type[UsersRepository]
-    prompotions: Type[PromoRepository]
-    prompoitems: Type[PromoItemRepository]
-    clients: Type[ClientRepository]
-    clients: Type[ProductRepository]
+    products: Type[ProductRepository]
+    dealers: Type[DealerRepository]
 
     @abstractmethod
     def __init__(self):
@@ -45,10 +42,8 @@ class UnitOfWork:
         self.session = self.session_factory()
 
         self.users = UsersRepository(self.session)
-        self.promotions = PromoRepository(self.session)
-        self.promoitems = PromoItemRepository(self.session)
-        self.clients = ClientRepository(self.session)
         self.products = ProductRepository(self.session)
+        self.dealers = DealerRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()

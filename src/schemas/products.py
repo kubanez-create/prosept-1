@@ -17,3 +17,9 @@ class Product(BaseModel):
     wb_article: Optional[float]
     ym_article: Optional[str]
     wb_article_td: Optional[str]
+
+
+class ProductDb(BaseModel):
+    article: str
+    name: Optional[str]
+    cost: Optional[float]
