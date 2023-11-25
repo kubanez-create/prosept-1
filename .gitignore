@@ -1,0 +1,7 @@
+venv/
+.env
+trunk/
+__pycache__/
+.vscode/
+eckodriver.log
+.pytest_cache/
