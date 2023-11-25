@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Type
 
 from src.db.db import async_session_maker
+from src.repositories.dealerprices import DealerPriceRepository
 from src.repositories.dealers import DealerRepository
 from src.repositories.products import ProductRepository
 from src.repositories.users import UsersRepository
@@ -12,6 +13,7 @@ class IUnitOfWork(ABC):
     users: Type[UsersRepository]
     products: Type[ProductRepository]
     dealers: Type[DealerRepository]
+    dealerprices: Type[DealerPriceRepository]
 
     @abstractmethod
     def __init__(self):
@@ -44,6 +46,7 @@ class UnitOfWork:
         self.users = UsersRepository(self.session)
         self.products = ProductRepository(self.session)
         self.dealers = DealerRepository(self.session)
+        self.dealerprices = DealerPriceRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()

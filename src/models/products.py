@@ -24,7 +24,7 @@ class Product(Base):
     ym_article: Mapped[Optional[str]]
     wb_article_td: Mapped[Optional[str]]
     proddealers: Mapped[List["ProductDealer"]] = relationship(
-        back_populates="product_obj"
+        back_populates="products"
     )
 
     def to_read_model(self) -> Product:

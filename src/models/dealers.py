@@ -13,7 +13,7 @@ class Dealer(Base):
     name: Mapped[str]
     dealerprices: Mapped[List["DealerPrice"]] = relationship(back_populates="dealer")
     productdealers: Mapped[List["ProductDealer"]] = relationship(
-        back_populates="dealer_obj"
+        back_populates="dealers"
     )
 
     def to_read_model(self) -> Dealer:

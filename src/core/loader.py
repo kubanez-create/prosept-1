@@ -65,6 +65,42 @@ class Loader:
                         ):
                             pass
 
+                if self.model == "dealerprices":
+                    dealerprice_obj = {
+                        "id": data_to_insert.get("id"),
+                        "product_key": data_to_insert.get("product_key"),
+                        "price": data_to_insert.get("price"),
+                        "product_url": data_to_insert.get("product_url"),
+                        "product_name": data_to_insert.get("product_name"),
+                        "date": data_to_insert.get("date"),
+                        "dealer_id": data_to_insert.get("dealer_id"),
+                    }
+                    url = "http://127.0.0.1:8000/api/dealerprices/add"
+                    headers = {"Content-type": "application/json"}
+                    async with aiohttp.ClientSession() as session:
+                        async with session.post(
+                            url,
+                            json=dealerprice_obj,
+                            headers=headers,
+                        ):
+                            pass
+
+                if self.model == "productdealers":
+                    productdealer_obj = {
+                        "id": data_to_insert.get("id"),
+                        "key": data_to_insert.get("key"),
+                        "dealer_id": data_to_insert.get("dealer_id"),
+                        "product_id": data_to_insert.get("product_id"),
+                    }
+                    url = "http://127.0.0.1:8000/api/productdealers/add"
+                    headers = {"Content-type": "application/json"}
+                    async with aiohttp.ClientSession() as session:
+                        async with session.post(
+                            url,
+                            json=productdealer_obj,
+                            headers=headers,
+                        ):
+                            pass
 
 if __name__ == "__main__":
     model, file = sys.argv[1:]
