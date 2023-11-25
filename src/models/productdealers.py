@@ -2,6 +2,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db.db import Base
+
 # to run migrations comment out next line and put DealerPriceDb.product_key
 # in quotes but to run program you'll need to return everything as it is now
 from src.models.dealerprices import DealerPrice as DealerPriceDb
@@ -20,10 +21,11 @@ class ProductDealer(Base):
             DealerPriceDb.product_key,
             DealerPriceDb.date,
             DealerPriceDb.dealer_id,
-        ]
+        ],
     )
     dealers: Mapped["Dealer"] = relationship(back_populates="productdealers")
     products: Mapped["Product"] = relationship(back_populates="proddealers")
+
 
 #     def to_read_model(self) -> DealerPrice:
 #         return DealerPrice(
