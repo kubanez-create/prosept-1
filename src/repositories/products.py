@@ -1,9 +1,10 @@
 from sqlalchemy import insert
-# from sqlalchemy.exc import NoResultFound
-# from sqlalchemy.orm import selectinload
 
 from src.models.products import Product
 from src.utils.repository import SQLAlchemyRepository
+
+# from sqlalchemy.exc import NoResultFound
+# from sqlalchemy.orm import selectinload
 
 
 class ProductRepository(SQLAlchemyRepository):
