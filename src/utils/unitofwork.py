@@ -4,6 +4,7 @@ from typing import Type
 from src.db.db import async_session_maker
 from src.repositories.dealerprices import DealerPriceRepository
 from src.repositories.dealers import DealerRepository
+from src.repositories.productdealers import ProductDealerRepository
 from src.repositories.products import ProductRepository
 from src.repositories.users import UsersRepository
 
@@ -14,6 +15,7 @@ class IUnitOfWork(ABC):
     products: Type[ProductRepository]
     dealers: Type[DealerRepository]
     dealerprices: Type[DealerPriceRepository]
+    productdealers: Type[ProductDealerRepository]
 
     @abstractmethod
     def __init__(self):
@@ -47,6 +49,7 @@ class UnitOfWork:
         self.products = ProductRepository(self.session)
         self.dealers = DealerRepository(self.session)
         self.dealerprices = DealerPriceRepository(self.session)
+        self.productdealers = ProductDealerRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()

@@ -2,7 +2,8 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db.db import Base
-from src.models import Dealer, DealerPrice, Product
+# to run migrations comment out next line and put DealerPriceDb.product_key
+# in quotes but to run program you'll need to return everything as it is now
 from src.models.dealerprices import DealerPrice as DealerPriceDb
 
 
