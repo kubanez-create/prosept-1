@@ -20,6 +20,7 @@ class Product(BaseModel):
 
 
 class ProductDb(BaseModel):
-    article: str
-    name: Optional[str]
-    cost: Optional[float]
+    article: str | None = None
+    name: str | None = None
+    cost: float | None = None
+    recommended_price: str | None = None

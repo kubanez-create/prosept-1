@@ -5,7 +5,7 @@ from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db.db import Base
-from src.schemas.dealerprices import DealerPrice
+from src.schemas.dealerprices import DealerPriceDb
 
 
 class DealerPrice(Base):
@@ -20,15 +20,13 @@ class DealerPrice(Base):
     date: Mapped[date]
     dealer_id: Mapped[int] = mapped_column(ForeignKey("dealer.id"))
     dealer: Mapped["Dealer"] = relationship(back_populates="dealerprices")
-    # proddealer: Mapped["ProductDealer"] = relationship(back_populates="keys")
 
-    def to_read_model(self) -> DealerPrice:
-        return DealerPrice(
-            id=self.id,
+
+
+    def to_read_model(self) -> DealerPriceDb:
+        return DealerPriceDb(
             product_key=self.product_key,
             price=self.price,
-            product_url=self.product_url,
             product_name=self.product_name,
-            date=self.date,
             dealer_id=self.dealer_id,
         )
