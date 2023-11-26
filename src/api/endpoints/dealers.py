@@ -9,7 +9,7 @@ router = APIRouter(
 )
 
 
-@router.post("/add")
+@router.post("/add", tags=["AdminZone"])
 async def add_dealer(
     dealer: Dealer,
     uow: UOWDep,
