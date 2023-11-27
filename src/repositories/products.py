@@ -15,7 +15,6 @@ class ProductRepository(SQLAlchemyRepository):
             insert(self.model)
             .values(**data)
             .returning(self.model)
-            # .options(selectinload(self.model.items))
         )
         res = await self.session.execute(stmt)
         return res.scalar_one()

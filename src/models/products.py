@@ -29,6 +29,7 @@ class Product(Base):
 
     def to_read_model(self) -> Product:
         return Product(
-            id=self.id,
+            article=self.article,
             name=self.name,
+            cost=self.cost
         )
