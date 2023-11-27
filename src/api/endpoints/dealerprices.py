@@ -29,7 +29,6 @@ async def get_dealerprices(
 
     Args:
         uow (UOWDep): unit of work dependancy
-        status (bool): status query parameter
         date_before (date): filter all goods before that date
         date_after (date): filter all goods after that date
         dealer (int): dealer's id
