@@ -16,3 +16,15 @@ async def add_product(
 ):
     product = await ProductService().add_product(uow, product)
     return
+
+@router.get("/")
+async def get_products(
+    uow: UOWDep,
+):
+    """Get all manufacture's products.
+
+    Args:
+        uow (UOWDep): unit of work dependancy
+    """
+    products = await ProductService().get_products(uow)
+    return products

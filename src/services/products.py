@@ -9,3 +9,8 @@ class ProductService:
             product = await uow.products.add_one(product_dict)
             await uow.commit()
             return product.id
+
+    async def get_products(self, uow: IUnitOfWork):
+        async with uow:
+            products = await uow.products.find_all()
+            return products
