@@ -23,20 +23,25 @@ async def get_dealerprices(
     uow: UOWDep,
     date_before: date | None = None,
     date_after: date | None = None,
-    dealer: int | None = None
+    dealer: int | None = None,
+    status: bool | None = False
 ):
     """Get all (possibly) filtered dealer's items.
 
+    To get all objects use status=True, to get only unmatched objects -
+    set status=False
     Args:
         uow (UOWDep): unit of work dependancy
         date_before (date): filter all goods before that date
         date_after (date): filter all goods after that date
         dealer (int): dealer's id
+        status (bool): whether or not to include unmatched goods
     """
     dlp_objects = await DealerPriceService().get_dealerprices(
         date_before=date_before,
         date_after=date_after,
         dealer=dealer,
+        status=status,
         uow=uow
     )
     return dlp_objects

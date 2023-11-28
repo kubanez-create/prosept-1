@@ -1,5 +1,4 @@
-from datetime import date
-from sqlalchemy import ForeignKey, ForeignKeyConstraint
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.db.db import Base
@@ -12,24 +11,11 @@ from src.models.dealerprices import DealerPrice as DealerPriceDb
 
 class ProductDealer(Base):
     __tablename__ = "productdealer"
-    # __table_args__ = (
-    #     ForeignKeyConstraint(
-    #         ["product_key", "date", "dealer_id"],
-    #         [
-    #             "dealerprice.product_key",
-    #             "dealerprice.date",
-    #             "dealerprice.dealer_id"
-    #         ]
-    #     ),
-    # )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     key: Mapped[str]
     dealer_id: Mapped[int] = mapped_column(ForeignKey("dealer.id"), primary_key=True)
     product_id: Mapped[int] = mapped_column(ForeignKey("product.id"), primary_key=True)
-    product_key: Mapped[str]
-    date: Mapped[date]
-    dealer_id: Mapped[int]
     keys: Mapped["DealerPrice"] = relationship(
         primaryjoin="ProductDealer.key==DealerPrice.product_key",
         foreign_keys=[

@@ -92,7 +92,6 @@ class Loader:
                         "dealer_id": data_to_insert.get("dealer_id"),
                         "product_id": data_to_insert.get("product_id"),
                     }
-                    print(productdealer_obj)
                     url = "http://127.0.0.1:8000/api/productdealers/add"
                     headers = {"Content-type": "application/json"}
                     async with aiohttp.ClientSession() as session:

@@ -18,7 +18,8 @@ class DealerPriceRepository(SQLAlchemyRepository):
             *,
             date_before: date | None = None,
             date_after: date | None = None,
-            dealer: int | None = None
+            dealer: int | None = None,
+            status: bool | None = False,
     ) -> list[DealerPriceDb]:
         # if there's no filters - apply none
         stmt = select(
@@ -63,9 +64,13 @@ class DealerPriceRepository(SQLAlchemyRepository):
                 "recommended_price": row[7]
             }
             outer_obj = DealerPriceDb(**outer_dict)
-            if inner_dict.get("name") is not None:
+            if not status and inner_dict.get("name") is None:
+                res_list.append(outer_obj)
+                continue
+            if status and inner_dict.get("name") is not None:
                 inner_obj = ProductDb(**inner_dict)
                 outer_obj.product = inner_obj
                 outer_obj.status = True
-            res_list.append(outer_obj)
+            if status:
+                res_list.append(outer_obj)
         return res_list
