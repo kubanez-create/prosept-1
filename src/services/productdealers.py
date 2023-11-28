@@ -1,4 +1,4 @@
-from src.schemas.productdealers import ProductDealer
+from src.schemas.productdealers import ProductDealer, ProductDealerCreate
 from src.utils.unitofwork import IUnitOfWork
 
 
@@ -11,5 +11,16 @@ class ProductDealerService:
         productdealer_dict = productdealer.model_dump()
         async with uow:
             productdealer = await uow.productdealers.add_one(productdealer_dict)
+            await uow.commit()
+            return productdealer.id
+
+    async def create_productdealer(
+            self,
+            uow: IUnitOfWork,
+            productdealer: ProductDealerCreate
+    ):
+        productdealer_dict = productdealer.model_dump()
+        async with uow:
+            productdealer = await uow.productdealers.create_one(productdealer_dict)
             await uow.commit()
             return productdealer.id

@@ -18,7 +18,7 @@ async def add_dealerprice(
     dealerprice = await DealerPriceService().add_dealerprice(uow, dealerprice)
     return
 
-@router.get("/", response_model=list[DealerPriceDb])
+@router.get("/", response_model=list[DealerPriceDb], tags=["Main"])
 async def get_dealerprices(
     uow: UOWDep,
     date_before: date | None = None,
