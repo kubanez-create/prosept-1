@@ -9,7 +9,8 @@ from src.schemas.products import Product
 class Product(Base):
     __tablename__ = "product"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    db_id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(unique=True)
     article: Mapped[str]
     ean_13: Mapped[Optional[float]]
     name: Mapped[Optional[str]]

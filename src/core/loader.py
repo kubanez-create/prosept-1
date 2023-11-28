@@ -22,7 +22,6 @@ class Loader:
 
             for row in objects:
                 data_to_insert = dict(zip(field_names, row))
-                print(data_to_insert)
 
                 if self.model == "products":
                     product_obj = {
