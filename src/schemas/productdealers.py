@@ -6,3 +6,9 @@ class ProductDealer(BaseModel):
     key: str
     dealer_id: int
     product_id: int
+
+
+class ProductDealerCreate(BaseModel):
+    key: str
+    dealer_id: int
+    product_id: int

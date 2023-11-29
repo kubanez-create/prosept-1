@@ -17,7 +17,7 @@ async def add_dealer(
     dealer = await DealerService().add_dealer(uow, dealer)
     return
 
-@router.get("/", response_model=list[DealerDb])
+@router.get("/", response_model=list[DealerDb], tags=["Main"])
 async def get_dealers(
     uow: UOWDep,
     dealer: str | None = None

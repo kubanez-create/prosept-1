@@ -20,12 +20,19 @@ class DealerPriceService:
             uow: IUnitOfWork,
             date_before: date | None = None,
             date_after: date | None = None,
-            dealer: int | None = None
+            dealer: int | None = None,
+            status: bool | None = False
     ):
         async with uow:
             products = await uow.dealerprices.find_all(
                 date_before=date_before,
                 date_after=date_after,
                 dealer=dealer,
+                status=status,
             )
             return products
+
+    async def get_statistics(self, uow: IUnitOfWork):
+        async with uow:
+            dealers = await uow.dealerprices.get_statistics()
+            return dealers

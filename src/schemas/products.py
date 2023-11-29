@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class Product(BaseModel):
+    id: int
     article: str
     ean_13: Optional[float]
     name: Optional[str]
