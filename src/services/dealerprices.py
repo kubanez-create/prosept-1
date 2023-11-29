@@ -31,3 +31,8 @@ class DealerPriceService:
                 status=status,
             )
             return products
+
+    async def get_statistics(self, uow: IUnitOfWork):
+        async with uow:
+            dealers = await uow.dealerprices.get_statistics()
+            return dealers

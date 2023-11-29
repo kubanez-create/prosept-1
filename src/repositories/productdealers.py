@@ -1,4 +1,5 @@
 from sqlalchemy import insert, select
+
 from src.models.productdealers import ProductDealer
 from src.utils.repository import SQLAlchemyRepository
 

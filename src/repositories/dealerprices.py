@@ -1,7 +1,8 @@
 from datetime import date
 
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, func, distinct
 
+from src.models.dealers import Dealer
 from src.models.dealerprices import DealerPrice
 from src.models.products import Product
 from src.models.productdealers import ProductDealer
@@ -74,3 +75,17 @@ class DealerPriceRepository(SQLAlchemyRepository):
             if status:
                 res_list.append(outer_obj)
         return res_list
+
+    async def get_statistics(self):
+        stmt = select(
+            self.model.dealer_id,
+            func.count(self.model.product_key.distinct()),
+            func.count(self.model.product_key)
+        ).join(
+            ProductDealer,
+            onclause=ProductDealer.key==DealerPrice.product_key,
+            isouter=True
+        ).join(Product, isouter=True).group_by(self.model.dealer_id)
+        res = await self.session.execute(stmt)
+        res = [(row[0].dealer_id, row.article) for row in res.all()]
+        return res
