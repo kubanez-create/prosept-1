@@ -46,16 +46,16 @@ async def get_dealerprices(
     )
     return dlp_objects
 
-# @router.get("/statistics", tags=["Main"])
-# async def get_statistics(
-#     uow: UOWDep,
-# ):
-#     """Get list of matched and unmatched objects for each dealer.
+@router.get("/statistics", tags=["Main"])
+async def get_statistics(
+    uow: UOWDep,
+):
+    """Get list of matched and unmatched objects for each dealer.
 
-#     Args:
-#         uow (UOWDep): unit of work dependancy
-#     """
-#     dl_objects = await DealerPriceService().get_statistics(
-#         uow=uow
-#     )
-#     return dl_objects
+    Args:
+        uow (UOWDep): unit of work dependancy
+    """
+    dl_objects = await DealerPriceService().get_statistics(
+        uow=uow
+    )
+    return dl_objects
