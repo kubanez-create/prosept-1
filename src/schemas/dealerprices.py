@@ -14,6 +14,7 @@ class DealerPrice(BaseModel):
     date: date
     dealer_id: int
 
+
 class DealerPriceDb(BaseModel):
     product_key: str
     price: float

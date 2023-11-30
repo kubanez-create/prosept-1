@@ -10,11 +10,7 @@ class DealerService:
             await uow.commit()
             return dealer.id
 
-    async def get_dealers(
-            self,
-            uow: IUnitOfWork,
-            dealer: str | None = None
-    ):
+    async def get_dealers(self, uow: IUnitOfWork, dealer: str | None = None):
         async with uow:
             dealers = await uow.dealers.find_all(
                 dealer=dealer,

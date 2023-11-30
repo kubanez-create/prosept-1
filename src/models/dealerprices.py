@@ -21,8 +21,6 @@ class DealerPrice(Base):
     dealer_id: Mapped[int] = mapped_column(ForeignKey("dealer.id"))
     dealer: Mapped["Dealer"] = relationship(back_populates="dealerprices")
 
-
-
     def to_read_model(self) -> DealerPriceDb:
         return DealerPriceDb(
             product_key=self.product_key,

@@ -17,6 +17,7 @@ async def add_product(
     product = await ProductService().add_product(uow, product)
     return
 
+
 @router.get("/", tags=["Main"])
 async def get_products(
     uow: UOWDep,
