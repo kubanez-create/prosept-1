@@ -7,6 +7,7 @@ from src.models.dealerprices import DealerPrice
 from src.models.products import Product
 from src.models.productdealers import ProductDealer
 from src.schemas.dealerprices import DealerPriceDb
+from src.schemas.dto import StatisticsDTO
 from src.schemas.products import ProductDb
 from src.utils.repository import SQLAlchemyRepository
 
@@ -78,14 +79,18 @@ class DealerPriceRepository(SQLAlchemyRepository):
 
     async def get_statistics(self):
         subquery = select(
+            Dealer.name.label("dealer_name"),
             self.model.dealer_id,
             self.model.product_key,
+        ).join(
+            Dealer
         ).select_from(
             self.model,
         ).distinct().alias(name="subq")
 
         joined = select(
             ProductDealer.product_id,
+            subquery.c.dealer_name,
             subquery.c.dealer_id,
             subquery.c.product_key
         ).join(
@@ -96,12 +101,21 @@ class DealerPriceRepository(SQLAlchemyRepository):
         ).alias(name="joined")
         stmt = select(
             joined.c.dealer_id,
+            joined.c.dealer_name,
             func.count(joined.c.product_id).label("matched"),
             func.count(joined.c.product_id.is_(None)).label("unmatched"),
         ).select_from(
             joined
-        ).group_by(joined.c.dealer_id)
+        ).group_by(joined.c.dealer_id, joined.c.dealer_name)
 
         res = await self.session.execute(stmt)
-        res = [(row[0].dealer_id, row.article) for row in res.all()]
+        res = [
+            StatisticsDTO.model_validate(
+                {
+                    "id": row[0],
+                    "name": row[1],
+                    "matched": row[2],
+                    "unmatched": row[3]
+                }
+            ) for row in res.all()]
         return res
