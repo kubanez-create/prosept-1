@@ -25,12 +25,12 @@ class DealerPriceRepository(SQLAlchemyRepository):
     ) -> list[DealerPriceDb]:
         # if there's no filters - apply none
         stmt = select(
-            self.model.product_key,
+            self.model.product_key,  # need it for saving new match obj
             self.model.price,
             self.model.product_name,
-            self.model.dealer_id,
-            Product.article,
-            Product.name,
+            self.model.date,
+            self.model.dealer_id,  # need it for saving new match obj
+            Product.name_1c,
             Product.cost,
             Product.recommended_price
         ).join(
@@ -57,19 +57,19 @@ class DealerPriceRepository(SQLAlchemyRepository):
                 "product_key": row[0],
                 "price": row[1],
                 "product_name": row[2],
-                "dealer_id": row[3]
+                "date": row[3],
+                "dealer_id": row[4]
             }
             inner_dict = {
-                "article": row[4],
-                "name": row[5],
+                "name_1c": row[5],
                 "cost": row[6],
                 "recommended_price": row[7]
             }
             outer_obj = DealerPriceDb.model_validate(outer_dict)
-            if not status and inner_dict.get("name") is None:
+            if not status and inner_dict.get("name_1c") is None:
                 res_list.append(outer_obj)
                 continue
-            if status and inner_dict.get("name") is not None:
+            if status and inner_dict.get("name_1c") is not None:
                 inner_obj = ProductDb.model_validate(inner_dict)
                 outer_obj.product = inner_obj
                 outer_obj.status = True

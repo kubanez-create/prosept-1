@@ -21,7 +21,6 @@ class Product(BaseModel):
 
 
 class ProductDb(BaseModel):
-    article: str | None = None
-    name: str | None = None
+    name_1c: str | None = None
     cost: float | None = None
     recommended_price: str | None = None
