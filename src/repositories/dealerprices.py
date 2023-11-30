@@ -1,7 +1,6 @@
 from datetime import date
 
-from sqlalchemy import select, and_, func, distinct
-from sqlalchemy.orm import aliased
+from sqlalchemy import select, and_, func
 
 from src.models.dealers import Dealer
 from src.models.dealerprices import DealerPrice
@@ -40,10 +39,10 @@ class DealerPriceRepository(SQLAlchemyRepository):
         ).join(Product, isouter=True)
         # we will allow filter by both before and after dates for now
         if date_after is not None and date_before is not None:
-            stmt = select(self.model).where(
+            stmt = stmt.where(
                 and_(
-                    self.model.date > date_after,
-                    self.model.date < date_before
+                    self.model.date >= date_after,
+                    self.model.date <= date_before
                 )
             )
         if dealer is not None:
@@ -65,12 +64,12 @@ class DealerPriceRepository(SQLAlchemyRepository):
                 "cost": row[6],
                 "recommended_price": row[7]
             }
-            outer_obj = DealerPriceDb(**outer_dict)
+            outer_obj = DealerPriceDb.model_validate(outer_dict)
             if not status and inner_dict.get("name") is None:
                 res_list.append(outer_obj)
                 continue
             if status and inner_dict.get("name") is not None:
-                inner_obj = ProductDb(**inner_dict)
+                inner_obj = ProductDb.model_validate(inner_dict)
                 outer_obj.product = inner_obj
                 outer_obj.status = True
             if status:
@@ -79,19 +78,29 @@ class DealerPriceRepository(SQLAlchemyRepository):
 
     async def get_statistics(self):
         subquery = select(
-            Dealer.name,
             self.model.dealer_id,
-            self.model.product_key
-        ).join(
-            self.model
-        ).distinct().alias()
-
-        stmt = select(
-            subquery.c.name,
-            func.count(subquery.c.product_key)
+            self.model.product_key,
         ).select_from(
-            subquery
-        ).group_by(subquery.c.dealer_id, subquery.c.name)
+            self.model,
+        ).distinct().alias(name="subq")
+
+        joined = select(
+            ProductDealer.product_id,
+            subquery.c.dealer_id,
+            subquery.c.product_key
+        ).join(
+            ProductDealer,
+            onclause=(subquery.c.product_key==ProductDealer.key) &
+                     (subquery.c.dealer_id==ProductDealer.dealer_id),
+            isouter=True
+        ).alias(name="joined")
+        stmt = select(
+            joined.c.dealer_id,
+            func.count(joined.c.product_id).label("matched"),
+            func.count(joined.c.product_id.is_(None)).label("unmatched"),
+        ).select_from(
+            joined
+        ).group_by(joined.c.dealer_id)
 
         res = await self.session.execute(stmt)
         res = [(row[0].dealer_id, row.article) for row in res.all()]
