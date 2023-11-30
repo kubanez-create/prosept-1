@@ -1,11 +1,7 @@
 from typing import Annotated, AsyncGenerator
 
 from fastapi import Depends
-from fastapi_users import (
-    BaseUserManager,
-    FastAPIUsers,
-    UUIDIDMixin,
-)
+from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
 from fastapi_users.authentication import (
     AuthenticationBackend,
     BearerTransport,

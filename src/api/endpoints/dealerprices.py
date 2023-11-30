@@ -1,4 +1,5 @@
 from datetime import date
+
 from fastapi import APIRouter
 
 from src.api.dependencies import UOWDep
@@ -18,13 +19,14 @@ async def add_dealerprice(
     dealerprice = await DealerPriceService().add_dealerprice(uow, dealerprice)
     return
 
+
 @router.get("/", response_model=list[DealerPriceDb], tags=["Main"])
 async def get_dealerprices(
     uow: UOWDep,
     date_before: date | None = None,
     date_after: date | None = None,
     dealer: int | None = None,
-    status: bool | None = False
+    status: bool | None = False,
 ):
     """Get all (possibly) filtered dealer's items.
 
@@ -42,20 +44,19 @@ async def get_dealerprices(
         date_after=date_after,
         dealer=dealer,
         status=status,
-        uow=uow
+        uow=uow,
     )
     return dlp_objects
 
-# @router.get("/statistics", tags=["Main"])
-# async def get_statistics(
-#     uow: UOWDep,
-# ):
-#     """Get list of matched and unmatched objects for each dealer.
 
-#     Args:
-#         uow (UOWDep): unit of work dependancy
-#     """
-#     dl_objects = await DealerPriceService().get_statistics(
-#         uow=uow
-#     )
-#     return dl_objects
+@router.get("/statistics", tags=["Main"])
+async def get_statistics(
+    uow: UOWDep,
+):
+    """Get list of matched and unmatched objects for each dealer.
+
+    Args:
+        uow (UOWDep): unit of work dependancy
+    """
+    dl_objects = await DealerPriceService().get_statistics(uow=uow)
+    return dl_objects

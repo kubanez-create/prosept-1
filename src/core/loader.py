@@ -102,6 +102,7 @@ class Loader:
                         ):
                             pass
 
+
 if __name__ == "__main__":
     model, file = sys.argv[1:]
     # Ensure correct usage

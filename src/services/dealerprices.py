@@ -1,14 +1,11 @@
 from datetime import date
+
 from src.schemas.dealerprices import DealerPrice
 from src.utils.unitofwork import IUnitOfWork
 
 
 class DealerPriceService:
-    async def add_dealerprice(
-            self,
-            uow: IUnitOfWork,
-            dealerprice: DealerPrice
-    ):
+    async def add_dealerprice(self, uow: IUnitOfWork, dealerprice: DealerPrice):
         dealerprice_dict = dealerprice.model_dump()
         async with uow:
             dealerprice = await uow.dealerprices.add_one(dealerprice_dict)
@@ -16,12 +13,12 @@ class DealerPriceService:
             return dealerprice.id
 
     async def get_dealerprices(
-            self,
-            uow: IUnitOfWork,
-            date_before: date | None = None,
-            date_after: date | None = None,
-            dealer: int | None = None,
-            status: bool | None = False
+        self,
+        uow: IUnitOfWork,
+        date_before: date | None = None,
+        date_after: date | None = None,
+        dealer: int | None = None,
+        status: bool | None = False,
     ):
         async with uow:
             products = await uow.dealerprices.find_all(

@@ -15,8 +15,10 @@ async def add_productdealer(
     uow: UOWDep,
 ):
     productdealer = await ProductDealerService().add_productdealer(
-        uow, productdealer)
+        uow, productdealer
+    )
     return
+
 
 @router.post("/", tags=["Main"])
 async def create_productdealer(
@@ -30,5 +32,6 @@ async def create_productdealer(
         uow (UOWDep): unit of work dependancy
     """
     productdealer = await ProductDealerService().create_productdealer(
-        uow, productdealer)
+        uow, productdealer
+    )
     return
