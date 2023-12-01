@@ -1,4 +1,5 @@
 from sqlalchemy import select
+
 from src.models.dealers import Dealer
 from src.schemas.dealers import DealerDb
 from src.utils.repository import SQLAlchemyRepository
@@ -7,11 +8,7 @@ from src.utils.repository import SQLAlchemyRepository
 class DealerRepository(SQLAlchemyRepository):
     model = Dealer
 
-    async def find_all(
-            self,
-            *,
-            dealer: str | None = None
-    ) -> list[DealerDb]:
+    async def find_all(self, *, dealer: str | None = None) -> list[DealerDb]:
         # if there's no filters - apply none
         stmt = select(self.model)
 

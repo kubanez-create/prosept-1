@@ -17,19 +17,14 @@ async def add_dealer(
     dealer = await DealerService().add_dealer(uow, dealer)
     return
 
-@router.get("/", response_model=list[DealerDb])
-async def get_dealers(
-    uow: UOWDep,
-    dealer: str | None = None
-):
+
+@router.get("/", response_model=list[DealerDb], tags=["Main"])
+async def get_dealers(uow: UOWDep, dealer: str | None = None):
     """Get (possibly) filtered dealer's items.
 
     Args:
         uow (UOWDep): unit of work dependancy
         dealer (str): dealer's name
     """
-    dl_objects = await DealerService().get_dealers(
-        dealer=dealer,
-        uow=uow
-    )
+    dl_objects = await DealerService().get_dealers(dealer=dealer, uow=uow)
     return dl_objects

@@ -14,10 +14,12 @@ class DealerPrice(BaseModel):
     date: date
     dealer_id: int
 
+
 class DealerPriceDb(BaseModel):
     product_key: str
     price: float
     product_name: str
+    date: date
     status: bool | None = False
     dealer_id: int
     product: ProductDb | None = None

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from src.api.dependencies import UOWDep
-from src.schemas.productdealers import ProductDealer
+from src.schemas.productdealers import ProductDealer, ProductDealerCreate
 from src.services.productdealers import ProductDealerService
 
 router = APIRouter(
@@ -15,5 +15,23 @@ async def add_productdealer(
     uow: UOWDep,
 ):
     productdealer = await ProductDealerService().add_productdealer(
-        uow, productdealer)
+        uow, productdealer
+    )
+    return
+
+
+@router.post("/", tags=["Main"])
+async def create_productdealer(
+    productdealer: ProductDealerCreate,
+    uow: UOWDep,
+):
+    """Create new match object.
+
+    Args:
+        productdealer (ProductDealer): operators choice object
+        uow (UOWDep): unit of work dependancy
+    """
+    productdealer = await ProductDealerService().create_productdealer(
+        uow, productdealer
+    )
     return

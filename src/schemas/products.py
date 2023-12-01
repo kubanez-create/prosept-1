@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class Product(BaseModel):
+    id: int
     article: str
     ean_13: Optional[float]
     name: Optional[str]
@@ -20,7 +21,6 @@ class Product(BaseModel):
 
 
 class ProductDb(BaseModel):
-    article: str | None = None
-    name: str | None = None
+    name_1c: str | None = None
     cost: float | None = None
     recommended_price: str | None = None

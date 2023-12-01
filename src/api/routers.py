@@ -3,6 +3,7 @@ from .endpoints.dealers import router as router_dealers
 from .endpoints.productdealers import router as router_productdealers
 from .endpoints.products import router as router_products
 from .endpoints.users import router as router_users
+from .endpoints.predictions import router as router_predictions
 
 all_routers = [
     router_users,
@@ -10,4 +11,5 @@ all_routers = [
     router_dealers,
     router_dealerprices,
     router_productdealers,
+    router_predictions,
 ]

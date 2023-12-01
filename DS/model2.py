@@ -1,48 +1,11 @@
-import sys
+from typing import List
 import pandas as pd
 import pickle
 import torch
-
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
-from typing import List
-
 from sentence_transformers import SentenceTransformer, util
 from preprocess import clean_text_dealer
 
-from pydantic import EmailStr
-from pydantic import BaseModel
-from pydantic_settings import BaseSettings
 
-
-sys.path.append("")
-
-
-origins = [
-    "http://localhost",
-    "http://localhost:8080",
-]
-
-class Product(BaseModel):
-    id: int
-    article: str
-    name: str
-    price: float
-
-
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-@app.post("/predictions")
 def get_recommendations(marketing_dealerprice: pd.DataFrame,
                         dealer_product_key: int, k=3) -> List[int]:
     """
@@ -82,9 +45,5 @@ def get_recommendations(marketing_dealerprice: pd.DataFrame,
         score = score.cpu().data.numpy()
         idx = idx.item()
         best_idx.append(idx)
-    
+
     return best_idx
-
-
-# if __name__ == "__main__":
-#     uvicorn.run(app="main:app", reload=True)
