@@ -6,7 +6,7 @@ from src.db.db import Base
 # to run migrations comment out next line and put DealerPriceDb.product_key
 # as well as DealerPriceDb.date and DealerPriceDb.dealer_id
 # in quotes but to run program you'll need to return everything as it is now
-from src.models.dealerprices import DealerPrice as DealerPriceDb
+# from src.models.dealerprices import DealerPrice as DealerPriceDb
 
 
 class ProductDealer(Base):
@@ -19,9 +19,9 @@ class ProductDealer(Base):
     keys: Mapped["DealerPrice"] = relationship(
         primaryjoin="ProductDealer.key==DealerPrice.product_key",
         foreign_keys=[
-            DealerPriceDb.product_key,
-            DealerPriceDb.date,
-            DealerPriceDb.dealer_id,
+            "DealerPriceDb.product_key",
+            "DealerPriceDb.date",
+            "DealerPriceDb.dealer_id",
         ],
     )
     dealers: Mapped["Dealer"] = relationship(back_populates="productdealers")

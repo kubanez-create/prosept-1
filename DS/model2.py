@@ -3,7 +3,7 @@ import pandas as pd
 import pickle
 import torch
 from sentence_transformers import SentenceTransformer, util
-from preprocess import clean_text_dealer
+from DS.dsmodels.preprocess import clean_text_dealer
 
 
 def get_recommendations(marketing_dealerprice: pd.DataFrame,

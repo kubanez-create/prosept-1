@@ -5,5 +5,4 @@ __pycache__/
 .vscode/
 eckodriver.log
 .pytest_cache/
-DS/corpus_embeddings.pkl
-DS/labse_model.pkl
+*.pkl
