@@ -1,37 +1,42 @@
-import sys
+import pickle
 from typing import Annotated
 
 import pandas as pd
-import pickle
 import torch
-from fastapi import FastAPI, Depends
-from sentence_transformers import util
+from fastapi import Depends, FastAPI
 from pydantic import BaseModel
+from sentence_transformers import util
 
 from DS.dsmodels.preprocess import clean_text_dealer
+
 
 class Product(BaseModel):
     id: int
 
+
 app = FastAPI()
+
 
 def get_dealer_prices():
     marketing_dealerprice = pd.read_csv(
-        'DS/data/marketing_dealerprice.csv', sep=';', index_col='id'
+        "DS/data/marketing_dealerprice.csv", sep=";", index_col="id"
     )
     return marketing_dealerprice
 
+
 def get_model_file():
-    model_file = open('DS/dsmodels/labse_model.pkl', 'rb')
+    model_file = open("DS/dsmodels/labse_model.pkl", "rb")
     model = pickle.load(model_file)
     yield model
     model_file.close()
 
+
 def get_corpus_file():
-    corpus_file = open('DS/dsmodels/corpus_embeddings.pkl', 'rb')
+    corpus_file = open("DS/dsmodels/corpus_embeddings.pkl", "rb")
     corpus_embeddings = pickle.load(corpus_file)
     yield corpus_embeddings
     corpus_file.close()
+
 
 @app.get("/predictions", response_model=list[Product])
 def get_recommendations(
@@ -39,7 +44,7 @@ def get_recommendations(
     model: Annotated[dict, Depends(get_model_file)],
     corpus_embeddings: Annotated[dict, Depends(get_corpus_file)],
     dealer_product_key: int,
-    k: int = 3
+    k: int = 3,
 ):
     """
     Function that gives k-recommended names from Procept product base
@@ -48,7 +53,7 @@ def get_recommendations(
     :param k: number of recommended items
     :return products_id: list of recommended products_id
     """
-    query = marketing_dealerprice.loc[dealer_product_key][['product_name']]
+    query = marketing_dealerprice.loc[dealer_product_key][["product_name"]]
     query = clean_text_dealer(query)
     query_embedding = model.encode(query, convert_to_tensor=True)
 
@@ -61,5 +66,5 @@ def get_recommendations(
         score = score.cpu().data.numpy()
         idx = idx.item()
         best_idx.append(Product.model_validate({"id": idx}))
-    
+
     return best_idx

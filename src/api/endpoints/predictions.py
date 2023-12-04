@@ -1,8 +1,6 @@
 import aiohttp
 from fastapi import APIRouter
 
-from pydantic import BaseModel
-
 from src.api.dependencies import UOWDep
 from src.schemas.products import ProductDS, RecommendedProduct
 from src.services.products import ProductService
@@ -35,17 +33,13 @@ async def predict(uow: UOWDep, product_id: int, k: int = 10):
     #     f"{product_id}&k={k}"
     # )
     async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                if response.status == 200:
-                    response_json = await response.json()
-                    predictions = await ProductService(
-                    ).get_predicted_products(
-                            uow,
-                            [
-                                 ProductDS.model_validate(it)
-                                 for it in response_json
-                            ],
-                    )
-                    return predictions
-                else:
-                    return f"Ошибка: {response.status}, {response.text}"
+        async with session.get(url) as response:
+            if response.status == 200:
+                response_json = await response.json()
+                predictions = await ProductService().get_predicted_products(
+                    uow,
+                    [ProductDS.model_validate(it) for it in response_json],
+                )
+                return predictions
+            else:
+                return f"Ошибка: {response.status}, {response.text}"

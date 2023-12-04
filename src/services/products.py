@@ -3,7 +3,11 @@ from src.utils.unitofwork import IUnitOfWork
 
 
 class ProductService:
-    async def add_product(self, uow: IUnitOfWork, product: Product) -> ProductDb:
+    async def add_product(
+            self,
+            uow: IUnitOfWork,
+            product: Product
+    ) -> ProductDb:
         product_dict = product.model_dump()
         async with uow:
             product = await uow.products.add_one(product_dict)
@@ -16,10 +20,10 @@ class ProductService:
             return products
 
     async def get_predicted_products(
-            self,
-            uow: IUnitOfWork,
-            idxs: list[dict[str, int]],
-        ):
+        self,
+        uow: IUnitOfWork,
+        idxs: list[dict[str, int]],
+    ):
         async with uow:
             products = await uow.products.get_preds(idxs)
             return products

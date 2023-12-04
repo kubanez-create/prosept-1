@@ -1,10 +1,11 @@
-from math import log
-import pandas as pd
-from nltk.corpus import stopwords
 import re
 import string
+from math import log
 
 import nltk
+import pandas as pd
+from nltk.corpus import stopwords
+
 nltk.download('stopwords')
 
 # Constants

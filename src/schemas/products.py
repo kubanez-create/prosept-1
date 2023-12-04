@@ -30,5 +30,6 @@ class RecommendedProduct(BaseModel):
     id: int
     name_1c: str
 
+
 class ProductDS(BaseModel):
     id: int
