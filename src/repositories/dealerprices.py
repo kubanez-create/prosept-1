@@ -26,7 +26,8 @@ class DealerPriceRepository(SQLAlchemyRepository):
         # if there's no filters - apply none
         stmt = (
             select(
-                self.model.id,  # need it for saving new match obj
+                self.model.id,
+                self.model.product_key,  # need it for saving new match obj
                 self.model.price,
                 self.model.product_name,
                 self.model.date,
@@ -59,15 +60,16 @@ class DealerPriceRepository(SQLAlchemyRepository):
         for row in results:
             outer_dict = {
                 "id": row[0],
-                "price": row[1],
-                "product_name": row[2],
-                "date": row[3],
-                "dealer_id": row[4],
+                "product_key": row[1],
+                "price": row[2],
+                "product_name": row[3],
+                "date": row[4],
+                "dealer_id": row[5],
             }
             inner_dict = {
-                "name_1c": row[5],
-                "cost": row[6],
-                "recommended_price": row[7],
+                "name_1c": row[6],
+                "cost": row[7],
+                "recommended_price": row[8],
             }
             outer_obj = DealerPriceDb.model_validate(outer_dict)
             if not status and inner_dict.get("name_1c") is None:
