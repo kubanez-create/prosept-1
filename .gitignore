@@ -5,3 +5,5 @@ __pycache__/
 .vscode/
 eckodriver.log
 .pytest_cache/
+*.pkl
+*.db
