@@ -26,7 +26,7 @@ class DealerPriceRepository(SQLAlchemyRepository):
         # if there's no filters - apply none
         stmt = (
             select(
-                self.model.product_key,  # need it for saving new match obj
+                self.model.id,  # need it for saving new match obj
                 self.model.price,
                 self.model.product_name,
                 self.model.date,
@@ -58,7 +58,7 @@ class DealerPriceRepository(SQLAlchemyRepository):
         results = res.all()
         for row in results:
             outer_dict = {
-                "product_key": row[0],
+                "id": row[0],
                 "price": row[1],
                 "product_name": row[2],
                 "date": row[3],

@@ -25,4 +25,5 @@ class ProductRepository(SQLAlchemyRepository):
                 prod[0], from_attributes=True
             ) for prod in res.all()
         ]
-        return products
+        # return first 5 predicted items only
+        return products[:4]

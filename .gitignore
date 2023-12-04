@@ -6,3 +6,4 @@ __pycache__/
 eckodriver.log
 .pytest_cache/
 *.pkl
+*.db

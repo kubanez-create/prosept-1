@@ -1,37 +1,19 @@
 import sys
 from typing import Annotated
+
 import pandas as pd
 import pickle
 import torch
-
 from fastapi import FastAPI, Depends
-from fastapi.middleware.cors import CORSMiddleware
-
 from sentence_transformers import util
-from DS.dsmodels.preprocess import clean_text_dealer
-
 from pydantic import BaseModel
 
-sys.path.append("")
-
-origins = [
-    "*",
-    "http://localhost",
-]
+from DS.dsmodels.preprocess import clean_text_dealer
 
 class Product(BaseModel):
     id: int
 
-
 app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 def get_dealer_prices():
     marketing_dealerprice = pd.read_csv(
@@ -51,7 +33,7 @@ def get_corpus_file():
     yield corpus_embeddings
     corpus_file.close()
 
-@app.get("/predictions")
+@app.get("/predictions", response_model=list[Product])
 def get_recommendations(
     marketing_dealerprice: Annotated[dict, Depends(get_dealer_prices)],
     model: Annotated[dict, Depends(get_model_file)],
@@ -62,12 +44,10 @@ def get_recommendations(
     """
     Function that gives k-recommended names from Procept product base
     :param marketing_dealerprice: dataframe from dealerprice
-    :param dealer_product_key: dealer product name to which match recommendations
+    :param dealer_product_key: dealer product id to which match recommendations
     :param k: number of recommended items
     :return products_id: list of recommended products_id
     """
-    # query = marketing_dealerprice.loc[
-    #     marketing_dealerprice["product_key"] == dealer_product_key, 'product_name']
     query = marketing_dealerprice.loc[dealer_product_key][['product_name']]
     query = clean_text_dealer(query)
     query_embedding = model.encode(query, convert_to_tensor=True)
@@ -82,9 +62,4 @@ def get_recommendations(
         idx = idx.item()
         best_idx.append(Product.model_validate({"id": idx}))
     
-    print(best_idx, type(best_idx[0]))
     return best_idx
-
-
-# if __name__ == "__main__":
-#     uvicorn.run(app="main:app", reload=True)

@@ -1,4 +1,4 @@
-from src.schemas.products import Product, ProductDb, RecommendedProduct
+from src.schemas.products import Product, ProductDb
 from src.utils.unitofwork import IUnitOfWork
 
 
