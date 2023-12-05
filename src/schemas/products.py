@@ -6,18 +6,18 @@ from pydantic import BaseModel
 class Product(BaseModel):
     id: int
     article: str
-    ean_13: Optional[float]
-    name: Optional[str]
-    cost: Optional[float]
-    recommended_price: Optional[str]
-    category_id: Optional[float]
-    ozon_name: Optional[str]
-    name_1c: Optional[str]
-    wb_name: Optional[str]
-    ozon_article: Optional[float]
-    wb_article: Optional[float]
-    ym_article: Optional[str]
-    wb_article_td: Optional[str]
+    ean_13: float | None = None
+    name: str | None = None
+    cost: float | None = None
+    recommended_price: str | None = None
+    category_id: float | None = None
+    ozon_name: str | None = None
+    name_1c: str | None = None
+    wb_name: str | None = None
+    ozon_article: float | None = None
+    wb_article: float | None = None
+    ym_article: str | None = None
+    wb_article_td: str | None = None
 
 
 class ProductDb(BaseModel):

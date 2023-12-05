@@ -11,18 +11,18 @@ services:
     depends_on:
       - db
 
-  ds:
-    container_name: ds
-    build: ./DS
-    env_file: .env
-    command: bash -c "uvicorn src.main:app --reload --host 0.0.0.0 --port 8080"
-    volumes:
-      - ./DS:/app
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-      - backend
+  # ds:
+  #   container_name: ds
+  #   build: ./DS
+  #   env_file: .env
+  #   command: bash -c "uvicorn src.main:app --reload --host 0.0.0.0 --port 8080"
+  #   volumes:
+  #     - ./DS:/app
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - db
+  #     - backend
 
   db:
     container_name: db
