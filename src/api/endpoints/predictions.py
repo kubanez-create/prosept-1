@@ -23,15 +23,15 @@ async def predict(uow: UOWDep, product_id: int, k: int = 10):
         list[RecommendedProduct]: predicted items
     """
     # use this config inside docker compose stack
-    url = (
-        "http://172.17.0.1:8080/predictions/"
-        f"?dealer_product_key={product_id}&k={k}"
-    )
-    # use this config for local development
     # url = (
-    #     "http://localhost:8080/predictions/?dealer_product_key="
-    #     f"{product_id}&k={k}"
+    #     "http://172.17.0.1:8080/predictions/"
+    #     f"?dealer_product_key={product_id}&k={k}"
     # )
+    # use this config for local development
+    url = (
+        "http://localhost:8080/predictions/?dealer_product_key="
+        f"{product_id}&k={k}"
+    )
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             if response.status == 200:
