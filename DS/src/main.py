@@ -3,11 +3,16 @@ from typing import Annotated
 
 import pandas as pd
 import torch
+from dsmodels.preprocess import clean_text_dealer
 from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sentence_transformers import util
 
-from DS.dsmodels.preprocess import clean_text_dealer
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+]
 
 
 class Product(BaseModel):
@@ -15,6 +20,14 @@ class Product(BaseModel):
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def get_dealer_prices():
@@ -25,14 +38,14 @@ def get_dealer_prices():
 
 
 def get_model_file():
-    model_file = open("DS/dsmodels/labse_model.pkl", "rb")
+    model_file = open("dsmodels/labse_model.pkl", "rb")
     model = pickle.load(model_file)
     yield model
     model_file.close()
 
 
 def get_corpus_file():
-    corpus_file = open("DS/dsmodels/corpus_embeddings.pkl", "rb")
+    corpus_file = open("dsmodels/corpus_embeddings.pkl", "rb")
     corpus_embeddings = pickle.load(corpus_file)
     yield corpus_embeddings
     corpus_file.close()
