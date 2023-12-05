@@ -23,7 +23,8 @@ class ProductService:
         self,
         uow: IUnitOfWork,
         idxs: list[dict[str, int]],
+        k: int,
     ):
         async with uow:
-            products = await uow.products.get_preds(idxs)
+            products = await uow.products.get_preds(idxs, k)
             return products

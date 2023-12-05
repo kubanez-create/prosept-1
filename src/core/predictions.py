@@ -1,9 +1,10 @@
 import csv
+from functools import lru_cache
 import pandas as pd
 import pickle
 import torch
 from sentence_transformers import util
-from DS.dsmodels.preprocess import clean_text_dealer
+from src.core.DS.dsmodels.preprocess import clean_text_dealer
 
 
 def get_model():
@@ -69,6 +70,13 @@ def prepare_predictions_csv(
                 k=20
             )
             writer.writerow([product] + preds)
+
+@lru_cache()
+def get_predictions(id: int) -> list[int]:
+    preds = pd.read_csv(
+        "src/core/DS/predictions.csv", index_col="prod"
+    )
+    return preds.loc[id, :].to_list()
 
 if __name__ == "__main__":
     marketing_dealerprice = pd.read_csv(

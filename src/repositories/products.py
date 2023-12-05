@@ -15,7 +15,8 @@ class ProductRepository(SQLAlchemyRepository):
 
     async def get_preds(
             self,
-            idxs: list[ProductDS]
+            idxs: list[ProductDS],
+            k: int,
     ) -> list[RecommendedProduct]:
         db_inds = [ind.id for ind in idxs]
         stmt = select(self.model).where(self.model.id.in_(db_inds))
@@ -24,5 +25,5 @@ class ProductRepository(SQLAlchemyRepository):
             RecommendedProduct.model_validate(prod[0], from_attributes=True)
             for prod in res.all()
         ]
-        # return first 5 predicted items only
-        return products[:4]
+        # return first k predicted items only
+        return products[:k]
