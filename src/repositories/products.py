@@ -14,9 +14,9 @@ class ProductRepository(SQLAlchemyRepository):
         return res.scalar_one()
 
     async def get_preds(
-            self,
-            idxs: list[ProductDS],
-            k: int,
+        self,
+        idxs: list[ProductDS],
+        k: int,
     ) -> list[RecommendedProduct]:
         db_inds = [ind.id for ind in idxs]
         stmt = select(self.model).where(self.model.id.in_(db_inds))

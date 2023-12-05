@@ -3,17 +3,17 @@ from typing import Annotated
 
 import pandas as pd
 import torch
+from dsmodels.preprocess import clean_text_dealer
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sentence_transformers import util
 
-from dsmodels.preprocess import clean_text_dealer
-
 origins = [
     "http://localhost",
     "http://localhost:8000",
 ]
+
 
 class Product(BaseModel):
     id: int
@@ -28,6 +28,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 def get_dealer_prices():
     marketing_dealerprice = pd.read_csv(

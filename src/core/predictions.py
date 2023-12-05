@@ -1,31 +1,35 @@
 import csv
-from functools import lru_cache
-import pandas as pd
 import pickle
+from functools import lru_cache
+
+import pandas as pd
 import torch
 from sentence_transformers import util
+
 from src.core.DS.dsmodels.preprocess import clean_text_dealer
 
 
 def get_model():
-    file = open('src/core/DS/dsmodels/labse_model.pkl', 'rb')
+    file = open("src/core/DS/dsmodels/labse_model.pkl", "rb")
     model = pickle.load(file)
     yield model
     file.close()
 
+
 def get_corpus():
-    file = open('src/core/DS/dsmodels/corpus_embeddings.pkl', 'rb')
+    file = open("src/core/DS/dsmodels/corpus_embeddings.pkl", "rb")
     corpus_embeddings = pickle.load(file)
     yield corpus_embeddings
     file.close()
 
+
 def get_recommendation(
-        marketing_dealerprice: pd.DataFrame,
-        model,
-        corpus_embeddings,
-        dealer_product_key: int,
-        k: int = 3
-    ) -> list[int]:
+    marketing_dealerprice: pd.DataFrame,
+    model,
+    corpus_embeddings,
+    dealer_product_key: int,
+    k: int = 3,
+) -> list[int]:
     """
     Function that gives k-recommended names from Procept product base
     :param marketing_dealerprice: dataframe from dealerprice
@@ -33,7 +37,7 @@ def get_recommendation(
     :param k: number of recommended items
     :return products_id: list of recommended products_id
     """
-    query = marketing_dealerprice.loc[dealer_product_key][['product_name']]
+    query = marketing_dealerprice.loc[dealer_product_key][["product_name"]]
     query = clean_text_dealer(query)
     query_embedding = model.encode(query, convert_to_tensor=True)
 
@@ -49,14 +53,12 @@ def get_recommendation(
 
     return best_idx
 
+
 def prepare_predictions_csv(
-        marketing_dealerprice: pd.DataFrame,
-        model,
-        corpus_embeddings
-    ) -> None:
+    marketing_dealerprice: pd.DataFrame, model, corpus_embeddings
+) -> None:
     marketing_dealerprice.drop_duplicates(
-        subset=["product_key", "dealer_id"],
-        inplace=True
+        subset=["product_key", "dealer_id"], inplace=True
     )
     with open("src/core/DS/predictions.csv", "w") as file:
         writer = csv.writer(file)
@@ -67,16 +69,16 @@ def prepare_predictions_csv(
                 model=model,
                 corpus_embeddings=corpus_embeddings,
                 dealer_product_key=product,
-                k=20
+                k=20,
             )
             writer.writerow([product] + preds)
 
+
 @lru_cache()
 def get_predictions(id: int) -> list[int]:
-    preds = pd.read_csv(
-        "src/core/DS/predictions.csv", index_col="prod"
-    )
+    preds = pd.read_csv("src/core/DS/predictions.csv", index_col="prod")
     return preds.loc[id, :].to_list()
+
 
 if __name__ == "__main__":
     marketing_dealerprice = pd.read_csv(
@@ -85,7 +87,5 @@ if __name__ == "__main__":
     model = get_model()
     corpus = get_corpus()
     prepare_predictions_csv(
-        marketing_dealerprice,
-        model=next(model),
-        corpus_embeddings=next(corpus)
+        marketing_dealerprice, model=next(model), corpus_embeddings=next(corpus)
     )
