@@ -1,23 +1,26 @@
 import csv
 import pickle
 from functools import lru_cache
+import sys
 
 import pandas as pd
 import torch
 from sentence_transformers import util
 
-from src.core.DS.dsmodels.preprocess import clean_text_dealer
+sys.path.append("")
+
+from src.DS.dsmodels.preprocess import clean_text_dealer
 
 
 def get_model():
-    file = open("src/core/DS/dsmodels/labse_model.pkl", "rb")
+    file = open("src/DS/dsmodels/labse_model.pkl", "rb")
     model = pickle.load(file)
     yield model
     file.close()
 
 
 def get_corpus():
-    file = open("src/core/DS/dsmodels/corpus_embeddings.pkl", "rb")
+    file = open("src/DS/dsmodels/corpus_embeddings.pkl", "rb")
     corpus_embeddings = pickle.load(file)
     yield corpus_embeddings
     file.close()
@@ -55,28 +58,33 @@ def get_recommendation(
 
 
 def prepare_predictions_csv(
-    marketing_dealerprice: pd.DataFrame, model, corpus_embeddings
+    marketing_dealerprice: pd.DataFrame,
+    model,
+    corpus_embeddings,
+    k=3,
 ) -> None:
+    # filter marketing_dealerprice table to get only unique
+    # product_key-dealer_id rows
     marketing_dealerprice.drop_duplicates(
         subset=["product_key", "dealer_id"], inplace=True
     )
-    with open("src/core/DS/predictions.csv", "w") as file:
+    with open("src/DS/predictions.csv", "w") as file:
         writer = csv.writer(file)
-        writer.writerow(["prod"] + [str(i) for i in range(20)])
+        writer.writerow(["prod"] + [str(i) for i in range(k)])
         for product in marketing_dealerprice.index:
             preds = get_recommendation(
                 marketing_dealerprice,
                 model=model,
                 corpus_embeddings=corpus_embeddings,
                 dealer_product_key=product,
-                k=20,
+                k=k,
             )
             writer.writerow([product] + preds)
 
 
 @lru_cache()
 def get_predictions(id: int) -> list[int]:
-    preds = pd.read_csv("src/core/DS/predictions.csv", index_col="prod")
+    preds = pd.read_csv("src/DS/predictions.csv", index_col="prod")
     return preds.loc[id, :].to_list()
 
 
@@ -87,5 +95,7 @@ if __name__ == "__main__":
     model = get_model()
     corpus = get_corpus()
     prepare_predictions_csv(
-        marketing_dealerprice, model=next(model), corpus_embeddings=next(corpus)
+        marketing_dealerprice, model=next(model),
+        corpus_embeddings=next(corpus),
+        k=3
     )
