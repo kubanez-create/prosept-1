@@ -3,15 +3,16 @@ import pickle
 from functools import lru_cache
 import sys
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import pandas as pd
+from sqlalchemy import create_engine
 import torch
 from sentence_transformers import util
-
-from src.schemas.products import RecommendedProduct
 
 sys.path.append("")
 
 from src.DS.dsmodels.preprocess import clean_text_dealer
+from src.schemas.products import RecommendedProduct
 
 
 def get_model():
@@ -104,7 +105,7 @@ def row_to_product(row):
         }
     )
 
-if __name__ == "__main__":
+def main():
     marketing_dealerprice = pd.read_csv(
         "src/data/marketing_dealerprice.csv", sep=";", index_col="id"
     )
@@ -115,3 +116,17 @@ if __name__ == "__main__":
         corpus_embeddings=next(corpus),
         k=3
     )
+
+async def scheduler():
+    scheduler = AsyncIOScheduler()
+    engine = create_engine("sqlite:///scheduler.db")
+    scheduler.add_jobstore(
+        "sqlalchemy",
+        engine=engine,
+    )
+    scheduler.add_job(main, 'interval', days=1)
+
+    try:
+        scheduler.start()
+    except KeyboardInterrupt:
+        scheduler.shutdown()

@@ -9,6 +9,7 @@ sys.path.append("")
 from src.api.routers import all_routers
 from src.core.config import settings
 from src.core.init_db import create_first_superuser
+from src.core.predictions import scheduler
 
 origins = [
     "http://localhost",
@@ -19,6 +20,7 @@ origins = [
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await create_first_superuser()
+    await scheduler()
     yield
 
 
