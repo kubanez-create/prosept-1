@@ -7,6 +7,8 @@ import pandas as pd
 import torch
 from sentence_transformers import util
 
+from src.schemas.products import RecommendedProduct
+
 sys.path.append("")
 
 from src.DS.dsmodels.preprocess import clean_text_dealer
@@ -83,10 +85,24 @@ def prepare_predictions_csv(
 
 
 @lru_cache()
-def get_predictions(id: int) -> list[int]:
-    preds = pd.read_csv("src/DS/predictions.csv", index_col="prod")
-    return preds.loc[id, :].to_list()
+def get_predictions_df() -> pd.DataFrame:
+    return pd.read_csv("src/DS/predictions.csv", index_col="prod")
 
+@lru_cache()
+def get_products_df() -> pd.DataFrame:
+    products = pd.read_csv("src/data/marketing_product.csv", sep=';', index_col=0)
+    products.dropna(subset=['name'], inplace=True)
+    products = products[products.name != '   ']
+    products.fillna('unknown', inplace=True)
+    return products
+
+def row_to_product(row):
+    return RecommendedProduct.model_validate(
+        {
+            "id": row["id"],
+            "name_1c": row["name_1c"],
+        }
+    )
 
 if __name__ == "__main__":
     marketing_dealerprice = pd.read_csv(
