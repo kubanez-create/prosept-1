@@ -1,6 +1,6 @@
 from sqlalchemy import insert
-from src.core.predictions import get_products_df, row_to_product
 
+from src.core.predictions import get_products_df, row_to_product
 from src.models.products import Product
 from src.schemas.products import ProductDS, RecommendedProduct
 from src.utils.repository import SQLAlchemyRepository

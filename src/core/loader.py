@@ -27,16 +27,26 @@ class Loader:
                     product_obj = {
                         "id": data_to_insert.get("id"),
                         "article": data_to_insert.get("article"),
-                        "ean_13": data_to_insert.get("ean_13") if data_to_insert.get("ean_13") else 0,
+                        "ean_13": data_to_insert.get("ean_13")
+                        if data_to_insert.get("ean_13")
+                        else 0,
                         "name": data_to_insert.get("name"),
-                        "cost": data_to_insert.get("cost") if data_to_insert.get("cost") else 0,
+                        "cost": data_to_insert.get("cost")
+                        if data_to_insert.get("cost")
+                        else 0,
                         "recommended_price": data_to_insert.get("recommended_price"),
-                        "category_id": data_to_insert.get("category_id") if data_to_insert.get("category_id") else 0,
+                        "category_id": data_to_insert.get("category_id")
+                        if data_to_insert.get("category_id")
+                        else 0,
                         "ozon_name": data_to_insert.get("ozon_name"),
                         "name_1c": data_to_insert.get("name_1c"),
                         "wb_name": data_to_insert.get("wb_name"),
-                        "ozon_article": data_to_insert.get("ozon_article") if data_to_insert.get("ozon_article") else 0,
-                        "wb_article": data_to_insert.get("wb_article") if data_to_insert.get("wb_article") else 0,
+                        "ozon_article": data_to_insert.get("ozon_article")
+                        if data_to_insert.get("ozon_article")
+                        else 0,
+                        "wb_article": data_to_insert.get("wb_article")
+                        if data_to_insert.get("wb_article")
+                        else 0,
                         "ym_article": data_to_insert.get("ym_article"),
                         "wb_article_td": data_to_insert.get("wb_article_td"),
                     }

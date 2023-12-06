@@ -29,7 +29,7 @@ async def create_productdealer(
 
     Args:
         productdealer (ProductDealer): operators choice object
-        uow (UOWDep): unit of work dependancy
+        uow (UOWDep): unit of work dependency
     """
     productdealer = await ProductDealerService().create_productdealer(
         uow, productdealer

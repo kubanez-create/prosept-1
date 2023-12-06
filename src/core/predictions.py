@@ -1,13 +1,13 @@
 import csv
 import pickle
-from functools import lru_cache
 import sys
+from functools import lru_cache
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import pandas as pd
-from sqlalchemy import create_engine
 import torch
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from sentence_transformers import util
+from sqlalchemy import create_engine
 
 sys.path.append("")
 
@@ -89,13 +89,15 @@ def prepare_predictions_csv(
 def get_predictions_df() -> pd.DataFrame:
     return pd.read_csv("src/DS/predictions.csv", index_col="prod")
 
+
 @lru_cache()
 def get_products_df() -> pd.DataFrame:
-    products = pd.read_csv("src/data/marketing_product.csv", sep=';', index_col=0)
-    products.dropna(subset=['name'], inplace=True)
-    products = products[products.name != '   ']
-    products.fillna('unknown', inplace=True)
+    products = pd.read_csv("src/data/marketing_product.csv", sep=";", index_col=0)
+    products.dropna(subset=["name"], inplace=True)
+    products = products[products.name != "   "]
+    products.fillna("unknown", inplace=True)
     return products
+
 
 def row_to_product(row):
     return RecommendedProduct.model_validate(
@@ -105,6 +107,7 @@ def row_to_product(row):
         }
     )
 
+
 def main():
     marketing_dealerprice = pd.read_csv(
         "src/data/marketing_dealerprice.csv", sep=";", index_col="id"
@@ -112,10 +115,9 @@ def main():
     model = get_model()
     corpus = get_corpus()
     prepare_predictions_csv(
-        marketing_dealerprice, model=next(model),
-        corpus_embeddings=next(corpus),
-        k=3
+        marketing_dealerprice, model=next(model), corpus_embeddings=next(corpus), k=5
     )
+
 
 async def scheduler():
     scheduler = AsyncIOScheduler()
@@ -124,7 +126,7 @@ async def scheduler():
         "sqlalchemy",
         engine=engine,
     )
-    scheduler.add_job(main, 'interval', days=1)
+    scheduler.add_job(main, "cron", hour=6)
 
     try:
         scheduler.start()

@@ -12,8 +12,11 @@ from src.core.init_db import create_first_superuser
 from src.core.predictions import scheduler
 
 origins = [
+    "*",
     "http://localhost",
-    "45.87.246.151",
+    "http://localhost:5173",
+    "http://192.168.56.1:5173",
+    "http://81.31.246.233:5173",
 ]
 
 
@@ -37,6 +40,3 @@ app.add_middleware(
 
 for router in all_routers:
     app.include_router(router, prefix="/api")
-
-# if __name__ == "__main__":
-#     uvicorn.run(app="main:app", reload=True)

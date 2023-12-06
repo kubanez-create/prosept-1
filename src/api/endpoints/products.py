@@ -25,7 +25,7 @@ async def get_products(
     """Get all manufacture's products.
 
     Args:
-        uow (UOWDep): unit of work dependancy
+        uow (UOWDep): unit of work dependency
     """
     products = await ProductService().get_products(uow)
     return products

@@ -32,12 +32,13 @@ async def get_dealerprices(
 
     To get all objects use status=True, to get only unmatched objects -
     set status=False
+
     Args:
-        uow (UOWDep): unit of work dependancy
-        date_before (date): filter all goods before that date
-        date_after (date): filter all goods after that date
-        dealer (int): dealer's id
-        status (bool): whether or not to include unmatched goods
+       - **uow** (UOWDep): unit of work dependency
+       - **date_before** (date): filter all goods before that date
+       - **date_after** (date): filter all goods after that date
+       - **dealer** (int): dealer's id
+       - **status** (bool): whether or not to include unmatched goods
     """
     dlp_objects = await DealerPriceService().get_dealerprices(
         date_before=date_before,
@@ -56,7 +57,7 @@ async def get_statistics(
     """Get list of matched and unmatched objects for each dealer.
 
     Args:
-        uow (UOWDep): unit of work dependancy
+        uow (UOWDep): unit of work dependency
     """
     dl_objects = await DealerPriceService().get_statistics(uow=uow)
     return dl_objects

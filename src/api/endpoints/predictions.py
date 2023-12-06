@@ -17,9 +17,9 @@ async def predict(uow: UOWDep, product_id: int, k: int = 5):
     """Get k predicted products for a given dealer product's id.
 
     Args:
-        uow (UOWDep): unit of work dependancy
-        product_id (int): id from dealerprice table
-        k (int, optional): how many predicted items to return. Defaults to 5.
+       - **uow** (UOWDep): unit of work dependency
+       - **product_id** (int): id from dealerprice table
+       - **k** (int, optional): how many predicted items to return. Defaults to 5.
 
     Returns:
         list[RecommendedProduct]: predicted items
