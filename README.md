@@ -24,6 +24,10 @@
 
 - Перечислены в файле prosept/requirements.txt
 
+## Документация и архив приложения
+
+Можно найти (здесь)[https://drive.google.com/drive/folders/1eP4sx6kz2HKwijyl4_u1GobqCC5bGRhZ?usp=drive_link].
+
 ## Для запуска на собственном сервере
 
 1. Установите на сервере `docker` и `docker compose`;
