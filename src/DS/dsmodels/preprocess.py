@@ -3,10 +3,13 @@ import string
 from math import log
 
 import nltk
+
+nltk.download('stopwords')
+
 import pandas as pd
 from nltk.corpus import stopwords
 
-nltk.download('stopwords')
+
 
 # Constants
 MAGIC_NUMBER = 9e999

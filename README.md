@@ -11,7 +11,6 @@
 - получать статистику по дилерам - какое количество товаров поставщика заведено в матрицу клиента и какое количество из них имеет установленное соответствие с товаром поставщика;
 - создавать новый объект связи между товаром дилера и товаром поставщика.
 
-Помимо этого в автоматическом режиме ежедневно в 06:00 предсказательной моделью генерируются предсказания по соответствию товаров дилеров и товаров поставщика.
 
 ## Стек технологий
 
@@ -49,23 +48,22 @@ DB_PORT=<порт_базы_данных>
 ```
 
 5. Из корневой директории выполните команду `docker compose up -d --build`;
-   После запуска контейнера последовательно выполните команды (возможно потребуется прописать sudo)
+   После запуска контейнеров для того, чтобы наполнить базу данных, последовательно выполните команды (возможно потребуется прописать sudo)
 
 ```bash
-docker compose exec backend python manage.py migrate
-docker compose exec backend python manage.py createsuperuser
-docker compose exec backend python manage.py collectstatic --no-input
-docker compose exec backend python manage.py loadcsv product /app/data/pr_df.csv
-docker compose exec backend python manage.py loadcsv shop /app/data/st_df.csv
-docker compose exec backend python manage.py loadcsv sales /app/data/sales_2_st.csv
-docker compose exec backend python manage.py loadcsv forecasts /app/data/predictions_2_st.csv
+docker compose exec backend python src/core/loader.py products src/data/marketing_product.csv
+docker compose exec backend python src/core/loader.py dealers src/data/marketing_dealer.csv
+docker compose exec backend python src/core/loader.py dealerprices src/data/marketing_dealerprice.csv
+docker compose exec backend python src/core/loader.py productdealers src/data/marketing_productdealerkey.csv
 ```
 
 6. После этого Вам должна быть доступна страница с документацией http://localhost:8000/docs/.
 
-Получить токен можно как в swagger через обращение к /api/v1/auth/token/login, так и в админке в разделе Токенs.
-Чтобы авторизоваться в swagger вставьте в поле Authorize
-**token some_numbers_and_letters_your_token_consists_of** (cлово "token", затем пробел и значение токена).
+В данной версии приложения, безопасность реализована рудиментарно: Вы можете получить JWT token обратившись по адресу /api/auth/jwt/login, но все эндпоинты доступны для всех желающих, без авторизации. Это можно изменить добавив параметр `dependencies=[Depends(current_superuser)]` в корневой роутер, один из промежуточных роутеров или в любой из path декораторов, например, `@router.get("/", response_model=list[DealerDb], dependencies=[Depends(current_superuser)], tags=["Main"])`.
+
+Приложение полностью асинхронное (используются как асинхронные  запросы, так и асинхронный драйвер базы данных), запускается в двух процессах, по одному на каждое физическое ядро процессора и потому отличается быстродействием.
+
+Помимо этого можно включить (раскоментировав строчку # await scheduler() в функции lifespan в файле main.py) автоматический расчет предсказаний для товаров дилеров по расписанию ежедневно в 06:00. В данный момент функция отключена, т.к. требует для работы как минимум 3 Гб свободной оперативной памяти.
 
 ## Авторы
 

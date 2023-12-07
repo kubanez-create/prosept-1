@@ -23,7 +23,7 @@ origins = [
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await create_first_superuser()
-    await scheduler()
+    # await scheduler()
     yield
 
 

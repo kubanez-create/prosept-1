@@ -83,7 +83,17 @@ class DealerPriceRepository(SQLAlchemyRepository):
                 res_list.append(outer_obj)
         return res_list
 
-    async def get_statistics(self):
+    async def get_statistics(self) -> list[StatisticsDTO]:
+        """Get statistics for each dealer.
+
+        In order to obtain number of manufacturer products each dealer sell
+        we first get distinct pairs product_key-dealer_id from dealerprice
+        model, then join the resulting table with productdealer model and
+        finally get our statistics.
+
+        Returns:
+            list[StatisticsDTO]: statistics for each dealer
+        """
         subquery = (
             select(
                 Dealer.name.label("dealer_name"),

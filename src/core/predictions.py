@@ -14,6 +14,7 @@ sys.path.append("")
 from src.DS.dsmodels.preprocess import clean_text_dealer
 from src.schemas.products import RecommendedProduct
 
+NUMBER_OF_PREDICTED_ITEMS = 5
 
 def get_model():
     file = open("src/DS/dsmodels/labse_model.pkl", "rb")
@@ -115,7 +116,10 @@ def main():
     model = get_model()
     corpus = get_corpus()
     prepare_predictions_csv(
-        marketing_dealerprice, model=next(model), corpus_embeddings=next(corpus), k=5
+        marketing_dealerprice,
+        model=next(model),
+        corpus_embeddings=next(corpus),
+        k=NUMBER_OF_PREDICTED_ITEMS
     )
 
 
@@ -126,9 +130,13 @@ async def scheduler():
         "sqlalchemy",
         engine=engine,
     )
+    # it will fire every day at 6 AM
     scheduler.add_job(main, "cron", hour=6)
 
     try:
         scheduler.start()
     except KeyboardInterrupt:
         scheduler.shutdown()
+
+if __name__ == "__main__":
+    main()
