@@ -23,7 +23,7 @@ async def get_dealers(uow: UOWDep, dealer: str | None = None):
     """Get (possibly) filtered dealer's items.
 
     Args:
-        uow (UOWDep): unit of work dependancy
+        uow (UOWDep): unit of work dependency
         dealer (str): dealer's name
     """
     dl_objects = await DealerService().get_dealers(dealer=dealer, uow=uow)

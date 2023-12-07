@@ -1,16 +1,20 @@
 import csv
 import pickle
-from functools import lru_cache
 import sys
+from functools import lru_cache
 
 import pandas as pd
 import torch
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from sentence_transformers import util
+from sqlalchemy import create_engine
 
 sys.path.append("")
 
 from src.DS.dsmodels.preprocess import clean_text_dealer
+from src.schemas.products import RecommendedProduct
 
+NUMBER_OF_PREDICTED_ITEMS = 5
 
 def get_model():
     file = open("src/DS/dsmodels/labse_model.pkl", "rb")
@@ -83,19 +87,56 @@ def prepare_predictions_csv(
 
 
 @lru_cache()
-def get_predictions(id: int) -> list[int]:
-    preds = pd.read_csv("src/DS/predictions.csv", index_col="prod")
-    return preds.loc[id, :].to_list()
+def get_predictions_df() -> pd.DataFrame:
+    return pd.read_csv("src/DS/predictions.csv", index_col="prod")
 
 
-if __name__ == "__main__":
+@lru_cache()
+def get_products_df() -> pd.DataFrame:
+    products = pd.read_csv("src/data/marketing_product.csv", sep=";", index_col=0)
+    products.dropna(subset=["name"], inplace=True)
+    products = products[products.name != "   "]
+    products.fillna("unknown", inplace=True)
+    return products
+
+
+def row_to_product(row):
+    return RecommendedProduct.model_validate(
+        {
+            "id": row["id"],
+            "name_1c": row["name_1c"],
+        }
+    )
+
+
+def main():
     marketing_dealerprice = pd.read_csv(
         "src/data/marketing_dealerprice.csv", sep=";", index_col="id"
     )
     model = get_model()
     corpus = get_corpus()
     prepare_predictions_csv(
-        marketing_dealerprice, model=next(model),
+        marketing_dealerprice,
+        model=next(model),
         corpus_embeddings=next(corpus),
-        k=3
+        k=NUMBER_OF_PREDICTED_ITEMS
     )
+
+
+async def scheduler():
+    scheduler = AsyncIOScheduler()
+    engine = create_engine("sqlite:///scheduler.db")
+    scheduler.add_jobstore(
+        "sqlalchemy",
+        engine=engine,
+    )
+    # it will fire every day at 6 AM
+    scheduler.add_job(main, "cron", hour=6)
+
+    try:
+        scheduler.start()
+    except KeyboardInterrupt:
+        scheduler.shutdown()
+
+if __name__ == "__main__":
+    main()

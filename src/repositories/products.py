@@ -1,5 +1,6 @@
-from sqlalchemy import insert, select
+from sqlalchemy import insert
 
+from src.core.predictions import get_products_df, row_to_product
 from src.models.products import Product
 from src.schemas.products import ProductDS, RecommendedProduct
 from src.utils.repository import SQLAlchemyRepository
@@ -19,11 +20,9 @@ class ProductRepository(SQLAlchemyRepository):
         k: int,
     ) -> list[RecommendedProduct]:
         db_inds = [ind.id for ind in idxs]
-        stmt = select(self.model).where(self.model.id.in_(db_inds))
-        res = await self.session.execute(stmt)
-        products = [
-            RecommendedProduct.model_validate(prod[0], from_attributes=True)
-            for prod in res.all()
-        ]
+        product_df = get_products_df()
+        products = product_df.loc[db_inds, :].apply(
+            row_to_product, axis=1
+        ).tolist()
         # return first k predicted items only
         return products[:k]

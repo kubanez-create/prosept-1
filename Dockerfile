@@ -2,5 +2,6 @@ FROM python:3.11
 WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+RUN pip3 install torch --index-url https://download.pytorch.org/whl/cpu
+RUN pip install -U sentence-transformers
 COPY ./src /code/src
-# CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]

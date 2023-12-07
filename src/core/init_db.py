@@ -9,14 +9,11 @@ from src.schemas.users import UserSchemaAdd
 from .config import settings
 from .users import get_user_db, get_user_manager
 
-# Превращаем асинхронные генераторы в асинхронные менеджеры контекста.
 get_async_session_context = contextlib.asynccontextmanager(get_async_session)
 get_user_db_context = contextlib.asynccontextmanager(get_user_db)
 get_user_manager_context = contextlib.asynccontextmanager(get_user_manager)
 
 
-# Корутина, создающая юзера с переданным email и паролем.
-# Возможно создание суперюзера при передаче аргумента is_superuser=True.
 async def create_user(
     email: EmailStr,
     password: str,
