@@ -1,6 +1,6 @@
 venv/
 .env
-.dev.end
+.dev.env
 trunk/
 __pycache__/
 .vscode/
