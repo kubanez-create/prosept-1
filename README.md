@@ -26,7 +26,7 @@
 
 ## Документация и архив приложения
 
-Можно найти (здесь)[https://drive.google.com/drive/folders/1eP4sx6kz2HKwijyl4_u1GobqCC5bGRhZ?usp=drive_link].
+Могут быть найдены [здесь](https://drive.google.com/drive/folders/1eP4sx6kz2HKwijyl4_u1GobqCC5bGRhZ?usp=drive_link).
 
 ## Для запуска на собственном сервере
 
