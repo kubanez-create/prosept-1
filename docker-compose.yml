@@ -1,0 +1,22 @@
+services:
+  backend:
+    container_name: backend
+    build: .
+    env_file: .env
+    command: bash -c "alembic upgrade head && gunicorn src.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker  --bind 0.0.0.0:8000 --timeout 1800"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:13-alpine
+    env_file: .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  postgres_data:
