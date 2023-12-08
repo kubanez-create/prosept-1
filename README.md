@@ -47,7 +47,7 @@ FIRST_SUPERUSER_PASSWORD=<произвольный_пароль>
 POSTGRES_DB=<произвольное_имя_базы_данных>
 POSTGRES_USER=<имя_пользователя_базы_данных>
 POSTGRES_PASSWORD=<пароль_к_базе_данных>
-DB_HOST=<хост_базы_данных>
+DB_HOST=db
 DB_PORT=<порт_базы_данных>
 ```
 
