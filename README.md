@@ -32,7 +32,7 @@
 
 1. Установите на сервере `docker` и `docker compose`;
 2. Склонируйте себе репозиторий:
-   `git clone git@github.com:kubanez-create/prosept.git`
+   `git clone git@github.com:zhukov1414/prosept.git`
 3. Перейдите в созданную папку:
    `cd prosept`
 4. Создайте в корне проекта файл `.env`;
