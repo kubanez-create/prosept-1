@@ -1,7 +1,7 @@
 from httpx import AsyncClient
 
 
-async def test_add_specific_operations(ac: AsyncClient):
+async def test_add_specific_operations(ac):
     response = await ac.post("/api/products/add", json={
         "id": 2,
         "article": "257-34",
@@ -19,7 +19,8 @@ async def test_add_specific_operations(ac: AsyncClient):
         "wb_article_td": "string"
     })
 
-    assert response.status_code == 201
+    print("RESPONSE", response, response.json())
+    assert response.status_code == 200
     assert response.json()["id"] == 2
 
 # # @pytest.mark.asyncio

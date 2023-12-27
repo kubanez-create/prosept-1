@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     postgres_db: str
     db_host: str
     db_port: str
+    test_user: str
+    test_password: str
+    test_db: str
+    debug: bool
 
     class Config:
         env_file = ".env"
