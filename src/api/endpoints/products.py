@@ -13,9 +13,9 @@ router = APIRouter(
 async def add_product(
     product: Product,
     uow: UOWDep,
-):
+) -> Product:
     product = await ProductService().add_product(uow, product)
-    return
+    return product
 
 
 @router.get("/", tags=["Main"])

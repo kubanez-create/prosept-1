@@ -1,7 +1,9 @@
+import logging
+
 from httpx import AsyncClient
 
 
-async def test_add_specific_operations(ac):
+async def test_add_specific_operations(ac: AsyncClient):
     response = await ac.post("/api/products/add", json={
         "id": 2,
         "article": "257-34",
@@ -19,15 +21,11 @@ async def test_add_specific_operations(ac):
         "wb_article_td": "string"
     })
 
-    print("RESPONSE", response, response.json())
     assert response.status_code == 200
     assert response.json()["id"] == 2
 
-# # @pytest.mark.asyncio
-# async def test_get_specific_operations(ac: AsyncClient):
-#     response = await ac.get("/api/products")
+async def test_get_specific_operations(ac: AsyncClient):
+    response = await ac.get("/api/products")
 
-#     assert response.status_code == 200
-#     print(response.json())
-#     assert response.json()["status"] == "success"
-#     assert len(response.json()["data"]) == 1
+    assert response.status_code == 200
+    assert len(response.json()) == 1

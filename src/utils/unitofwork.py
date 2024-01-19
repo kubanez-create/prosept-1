@@ -10,7 +10,6 @@ from src.repositories.products import ProductRepository
 from src.repositories.users import UsersRepository
 
 
-# https://github1s.com/cosmicpython/code/tree/chapter_06_uow
 class IUnitOfWork(ABC):
     users: Type[UsersRepository]
     products: Type[ProductRepository]
@@ -41,8 +40,7 @@ class IUnitOfWork(ABC):
 
 class UnitOfWork:
     def __init__(self):
-        print("TEST DEBUG VAR IS?", bool(settings.debug))
-        if not settings.debug:
+        if not settings.debug == "True":
             self.session_factory = async_session_maker
         self.session_factory = test_async_session_maker
 
