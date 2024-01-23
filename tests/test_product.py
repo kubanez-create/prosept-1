@@ -2,6 +2,8 @@ import logging
 
 from httpx import AsyncClient
 
+from src.core.config import settings
+
 
 async def test_add_specific_operations(ac: AsyncClient):
     response = await ac.post("/api/products/add", json={
@@ -25,6 +27,7 @@ async def test_add_specific_operations(ac: AsyncClient):
     assert response.json()["id"] == 2
 
 async def test_get_specific_operations(ac: AsyncClient):
+    logging.info(f"SeTTINGs in tests: {settings.model_dump()}")
     response = await ac.get("/api/products")
 
     assert response.status_code == 200

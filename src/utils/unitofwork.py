@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import logging
 from typing import Type
 
 from src.db.db import async_session_maker, test_async_session_maker
@@ -40,7 +41,8 @@ class IUnitOfWork(ABC):
 
 class UnitOfWork:
     def __init__(self):
-        if not settings.debug == "True":
+        print(f"SETTINGS.DEBUG LOOKS LIKE: {settings.model_dump()}")
+        if not settings.debug:
             self.session_factory = async_session_maker
         self.session_factory = test_async_session_maker
 
