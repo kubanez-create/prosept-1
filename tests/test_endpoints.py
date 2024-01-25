@@ -1,11 +1,7 @@
-import logging
-
 from httpx import AsyncClient
 
-from src.core.config import settings
 
-
-async def test_add_specific_operations(ac: AsyncClient):
+async def test_add_product(ac: AsyncClient):
     response = await ac.post("/api/products/add", json={
         "id": 2,
         "article": "257-34",
@@ -26,9 +22,20 @@ async def test_add_specific_operations(ac: AsyncClient):
     assert response.status_code == 200
     assert response.json()["id"] == 2
 
-async def test_get_specific_operations(ac: AsyncClient):
-    logging.info(f"SeTTINGs in tests: {settings.model_dump()}")
+async def test_get_product(ac: AsyncClient):
     response = await ac.get("/api/products")
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+
+async def test_add_dealer(ac: AsyncClient):
+    response = await ac.post("/api/dealers/add", json={"name": "Something"})
+
+    assert response.status_code == 200
+
+
+async def test_get_dealer(ac: AsyncClient):
+    response = await ac.get("/api/dealers")
 
     assert response.status_code == 200
     assert len(response.json()) == 1

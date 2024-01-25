@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 import logging
+import os
 from typing import Type
 
 from src.db.db import async_session_maker, test_async_session_maker
-from src.core.config import settings
+from src.core.config import Settings, settings
 from src.repositories.dealerprices import DealerPriceRepository
 from src.repositories.dealers import DealerRepository
 from src.repositories.productdealers import ProductDealerRepository
@@ -41,10 +42,10 @@ class IUnitOfWork(ABC):
 
 class UnitOfWork:
     def __init__(self):
-        print(f"SETTINGS.DEBUG LOOKS LIKE: {settings.model_dump()}")
         if not settings.debug:
             self.session_factory = async_session_maker
-        self.session_factory = test_async_session_maker
+        else:
+            self.session_factory = test_async_session_maker
 
     async def __aenter__(self):
         self.session = self.session_factory()
