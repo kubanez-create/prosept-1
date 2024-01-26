@@ -65,3 +65,9 @@ async def test_get_statistics(ac: AsyncClient):
 
     assert response.status_code == 200
     assert len(response.json()) == 1
+
+async def test_get_predictionss(ac: AsyncClient):
+    response = await ac.get("/api/predictions?product_id=2&k=5")
+
+    assert response.status_code == 200
+    assert len(response.json()) == 5
