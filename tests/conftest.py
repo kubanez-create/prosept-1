@@ -10,8 +10,6 @@ import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.services.dealers import DealerService
-
 sys.path.append("")
 
 from src.utils.unitofwork import UnitOfWork
@@ -76,7 +74,6 @@ async def ac() -> AsyncGenerator[AsyncClient, None]:
 
 @pytest.fixture
 async def add_dealer():
-    logging.info("WE INSIDE FIXTURE")
     uow = UnitOfWork()
     async with uow:
         dealer = Dealer(name="Akson")

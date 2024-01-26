@@ -59,3 +59,9 @@ async def test_get_dealerprice(ac: AsyncClient):
 
     assert response.status_code == 200
     assert len(response.json()) == 1
+
+async def test_get_statistics(ac: AsyncClient):
+    response = await ac.get("/api/dealerprices/statistics")
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
