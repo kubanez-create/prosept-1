@@ -9,6 +9,7 @@ from fastapi import FastAPI
 import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.schemas.products import Product
 
 sys.path.append("")
 
@@ -80,3 +81,12 @@ async def add_dealer():
         dealer_db = await uow.dealers.add_one(dealer.model_dump())
         await uow.commit()
         return dealer_db.id
+
+@pytest.fixture
+async def add_product():
+    uow = UnitOfWork()
+    async with uow:
+        product = Product(id=245, article="008-1")
+        product_db = await uow.products.add_one(product.model_dump())
+        await uow.commit()
+        return product_db.id

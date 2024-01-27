@@ -66,8 +66,17 @@ async def test_get_statistics(ac: AsyncClient):
     assert response.status_code == 200
     assert len(response.json()) == 1
 
-async def test_get_predictionss(ac: AsyncClient):
+async def test_get_predictions(ac: AsyncClient):
     response = await ac.get("/api/predictions?product_id=2&k=5")
 
     assert response.status_code == 200
     assert len(response.json()) == 5
+
+async def test_add_productdealer(ac: AsyncClient, add_dealer, add_product):
+    response = await ac.post("/api/productdealers/", json={
+        "key": "546227",
+        "dealer_id": add_dealer,
+        "product_id": add_product
+    })
+
+    assert response.status_code == 200
