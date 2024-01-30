@@ -1,4 +1,3 @@
-import logging
 from httpx import AsyncClient
 
 from tests.conftest import add_dealer_akson
