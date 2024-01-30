@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import NoResultFound
 
 
 class AbstractRepository(ABC):
@@ -41,5 +42,8 @@ class SQLAlchemyRepository(AbstractRepository):
     async def find_one(self, **filter_by):
         stmt = select(self.model).filter_by(**filter_by)
         res = await self.session.execute(stmt)
-        res = res.scalar_one()
-        return res
+        try:
+            res = res.scalar_one()
+            return res
+        except NoResultFound:
+            return None

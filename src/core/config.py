@@ -1,10 +1,13 @@
+import logging
+import os
 from typing import Optional
 
 from pydantic import EmailStr
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file="../.env", extra="ignore") 
     app_title: str
     database_url: str
     secret: str
@@ -15,9 +18,10 @@ class Settings(BaseSettings):
     postgres_db: str
     db_host: str
     db_port: str
-
-    class Config:
-        env_file = ".env"
+    test_user: str
+    test_password: str
+    test_db: str
+    debug: bool = False
 
 
 settings = Settings()

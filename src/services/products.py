@@ -1,4 +1,4 @@
-from src.schemas.products import Product, ProductDb
+from src.schemas.products import Product, ProductShort
 from src.utils.unitofwork import IUnitOfWork
 
 
@@ -7,14 +7,14 @@ class ProductService:
             self,
             uow: IUnitOfWork,
             product: Product
-    ) -> ProductDb:
+    ) -> Product:
         product_dict = product.model_dump()
         async with uow:
             product = await uow.products.add_one(product_dict)
             await uow.commit()
-            return product.id
+            return product
 
-    async def get_products(self, uow: IUnitOfWork):
+    async def get_products(self, uow: IUnitOfWork) -> list[ProductShort]:
         async with uow:
             products = await uow.products.find_all()
             return products

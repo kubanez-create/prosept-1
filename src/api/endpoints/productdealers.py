@@ -24,7 +24,7 @@ async def add_productdealer(
 async def create_productdealer(
     productdealer: ProductDealerCreate,
     uow: UOWDep,
-):
+) -> ProductDealer:
     """Create new match object.
 
     Args:
@@ -34,4 +34,4 @@ async def create_productdealer(
     productdealer = await ProductDealerService().create_productdealer(
         uow, productdealer
     )
-    return
+    return productdealer

@@ -1,3 +1,5 @@
+import logging
+from logging.handlers import RotatingFileHandler
 import sys
 from contextlib import asynccontextmanager
 
@@ -10,6 +12,7 @@ from src.api.routers import all_routers
 from src.core.config import settings
 from src.core.init_db import create_first_superuser
 from src.core.predictions import scheduler
+from tests.conftest import BASE_DIR, LOG_FORMAT, DT_FORMAT
 
 origins = [
     "*",
@@ -19,10 +22,25 @@ origins = [
     "http://81.31.246.233:5173",
 ]
 
+def configure_logging():
+    log_dir = BASE_DIR / 'logs'
+    log_dir.mkdir(exist_ok=True)
+    log_file = log_dir / 'api.log'
+
+    rotating_handler = RotatingFileHandler(
+        log_file, maxBytes=10 ** 6, backupCount=5
+    )
+    logging.basicConfig(
+        datefmt=DT_FORMAT,
+        format=LOG_FORMAT,
+        level=logging.INFO,
+        handlers=(rotating_handler, logging.StreamHandler())
+    )
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await create_first_superuser()
+    configure_logging()
     # await scheduler()
     yield
 
