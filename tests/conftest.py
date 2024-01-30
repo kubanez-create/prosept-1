@@ -1,4 +1,5 @@
 import asyncio
+from datetime import date
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
@@ -9,13 +10,11 @@ from fastapi import FastAPI
 import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.schemas.products import Product
 
 sys.path.append("")
 
 from src.utils.unitofwork import UnitOfWork
 from src.db.db import get_async_session
-from src.schemas.dealers import Dealer
 from src.models import Base
 from src.api.routers import all_routers
 from src.db.db import engine_test, test_async_session_maker
@@ -28,6 +27,7 @@ metadata = Base.metadata
 log_dir = BASE_DIR / 'logs'
 log_dir.mkdir(exist_ok=True)
 log_file = log_dir / 'tests.log'
+
 
 rotating_handler = RotatingFileHandler(
     log_file, maxBytes=10 ** 6, backupCount=5
@@ -73,12 +73,27 @@ async def ac() -> AsyncGenerator[AsyncClient, None]:
     async with AsyncClient(app=app, base_url="http://test", follow_redirects=True) as ac:
         yield ac
 
-@pytest.fixture
-async def add_dealer():
+@pytest.fixture(scope="session")
+async def add_dealer_akson():
     uow = UnitOfWork()
     async with uow:
-        dealer = Dealer(name="Akson")
-        dealer_db = await uow.dealers.add_one(dealer.model_dump())
+        if dealer_obj := await uow.dealers.find_one(name="Akson"):
+            return dealer_obj.id
+        else:
+            dealer = dict(name="Akson")
+            dealer_db = await uow.dealers.add_one(dealer)        
+        await uow.commit()
+        return dealer_db.id
+
+@pytest.fixture(scope="session")
+async def add_dealer_bafus():
+    uow = UnitOfWork()
+    async with uow:
+        if dealer_obj := await uow.dealers.find_one(name="Bafus"):
+            return dealer_obj.id
+        else:
+            dealer = dict(name="Bafus")
+            dealer_db = await uow.dealers.add_one(dealer)
         await uow.commit()
         return dealer_db.id
 
@@ -86,7 +101,51 @@ async def add_dealer():
 async def add_product():
     uow = UnitOfWork()
     async with uow:
-        product = Product(id=245, article="008-1")
-        product_db = await uow.products.add_one(product.model_dump())
+        product = dict(
+            id=245,
+            article="008-1",
+            name_1c=(
+                "Антисептик невымываемый для ответственных конструкций "
+                "PROSEPT ULTRA, концентрат, 1 л."
+            )
+        )
+        product_db = await uow.products.add_one(product)
         await uow.commit()
         return product_db.id
+
+@pytest.fixture
+async def add_dealerprices(add_dealer_akson, add_dealer_bafus):
+    uow = UnitOfWork()
+    async with uow:
+        dp1 = dict(
+            product_key="546408",
+            price=175.00,
+            product_url=(
+                "https://akson.ru//p/kontsentrat_prosept_multipower_"
+                "dlya_mytya_polov_tsitrus_1l"
+            ),
+            product_name=(
+                "Концентрат Prosept Multipower для мытья полов"
+                ", цитрус 1л"
+            ),
+            date=date.fromisoformat("2023-07-13"),
+            dealer_id=add_dealer_akson
+        )
+        dp2 = dict(
+            product_key="546234",
+            price=285.00,
+            product_url=(
+                "https://akson.ru//p/sredstvo_dlya_chistki_lyustr_prosept"
+                "_universal_anti_dust_500ml"
+            ),
+            product_name=(
+                "Средство для чистки люстр Prosept Universal"
+                " Anti-dust, 500мл"
+            ),
+            date=date.fromisoformat("2023-07-14"),
+            dealer_id=add_dealer_bafus
+        )
+        _ = await uow.dealerprices.add_one(dp1)
+        _ = await uow.dealerprices.add_one(dp2)
+        await uow.commit()
+        return

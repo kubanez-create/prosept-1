@@ -24,6 +24,12 @@ class ProductDb(BaseModel):
     recommended_price: str | None = None
 
 
+class ProductShort(BaseModel):
+    article: str | None = None
+    name: str | None = None
+    cost: float | None = None
+
+
 class RecommendedProduct(BaseModel):
     id: int
     name_1c: str

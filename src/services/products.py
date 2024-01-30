@@ -1,4 +1,4 @@
-from src.schemas.products import Product
+from src.schemas.products import Product, ProductShort
 from src.utils.unitofwork import IUnitOfWork
 
 
@@ -14,7 +14,7 @@ class ProductService:
             await uow.commit()
             return product
 
-    async def get_products(self, uow: IUnitOfWork) -> list[Product]:
+    async def get_products(self, uow: IUnitOfWork) -> list[ProductShort]:
         async with uow:
             products = await uow.products.find_all()
             return products

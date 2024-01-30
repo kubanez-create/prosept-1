@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from src.api.dependencies import UOWDep
-from src.schemas.products import Product
+from src.schemas.products import Product, ProductShort
 from src.services.products import ProductService
 
 router = APIRouter(
@@ -21,7 +21,7 @@ async def add_product(
 @router.get("/", tags=["Main"])
 async def get_products(
     uow: UOWDep,
-):
+) -> list[ProductShort]:
     """Get all manufacture's products.
 
     Args:

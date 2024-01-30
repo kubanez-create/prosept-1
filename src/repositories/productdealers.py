@@ -7,7 +7,7 @@ from src.utils.repository import SQLAlchemyRepository
 class ProductDealerRepository(SQLAlchemyRepository):
     model = ProductDealer
 
-    async def create_one(self, data: dict) -> int:
+    async def create_one(self, data: dict):
         id = await self.session.execute(
             select(self.model.id).order_by(self.model.id)
         )

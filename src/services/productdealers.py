@@ -7,7 +7,7 @@ class ProductDealerService:
             self,
             uow: IUnitOfWork,
             productdealer: ProductDealer
-    ):
+    ) -> int:
         productdealer_dict = productdealer.model_dump()
         async with uow:
             productdealer = await uow.productdealers.add_one(productdealer_dict)
@@ -18,9 +18,9 @@ class ProductDealerService:
             self,
             uow: IUnitOfWork,
             productdealer: ProductDealerCreate
-    ):
+    ) -> ProductDealer:
         productdealer_dict = productdealer.model_dump()
         async with uow:
             productdealer = await uow.productdealers.create_one(productdealer_dict)
             await uow.commit()
-            return productdealer.id
+            return productdealer
